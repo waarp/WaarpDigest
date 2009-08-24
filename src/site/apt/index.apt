@@ -1,0 +1,18 @@
+GoldenGate Digest
+
+  The GoldenGate Digest project contains several classes that are common with different
+  sub projects of GoldenGate (FTP, OpenR66, ...). These classes are for Digest implementation.
+
+Dependency
+
+  This project has no external dependency.
+  It contains a re implementation of the FastMD5 library from Santeri Paavolainen and Timothy W Macinta.
+
+Specificities
+
+  These classes are for Digest implementation.
+
+[images/goldengatesmall.jpg] GoldenGate Main Project Logo
+
+  See global GoldenGate project at {{http://openr66.free.fr/}}and particular GoldenGate Digest page at
+  {{http://openr66.free.fr/GoldenGateDigest.html}}
