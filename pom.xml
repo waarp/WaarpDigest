@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>GoldenGateDigest</groupId>
+  <groupId>GoldenGate</groupId>
   <artifactId>GoldenGateDigest</artifactId>
   <name>GoldenGate Digest</name>
   <version>1.0.0</version>
@@ -73,8 +73,25 @@
   			<enabled>false</enabled>
   		</snapshots>
   	</repository>
+  	<repository>
+  		<id>goldengate.releases</id>
+  		<name>GoldenGate releases</name>
+  		<url>http://openr66.free.fr/maven2</url>
+  		<releases>
+  			<enabled>true</enabled>
+  		</releases>
+  		<snapshots>
+  			<enabled>false</enabled>
+  		</snapshots>
+  	</repository>
   </repositories>
   <dependencies>
+  	<dependency>
+      <groupId>org.jboss.netty</groupId>
+      <artifactId>netty</artifactId>
+      <version>3.1.2.GA</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
   <properties>
   	<attach-distribution>false</attach-distribution>
@@ -147,7 +164,7 @@
             </configuration>
           </execution>
           <execution>
-            <id>add-license</id>
+            <id>add-nonsource</id>
             <phase>package</phase>
             <goals>
               <goal>run</goal>
@@ -171,6 +188,13 @@
                       <zipfileset dir="${basedir}/license" prefix="META-INF/license/">
                         <exclude name="**/.*/**" />
                         <include name="**" />
+                      </zipfileset>
+                      <zipfileset dir="${basedir}/lib" prefix="META-INF/lib">
+                      </zipfileset>
+                      <zipfileset dir="${basedir}/src/main/java/goldengate/common/digest/CLIB" prefix="META-INF/libsrc/goldengate/common/digest/CLIB">
+                      </zipfileset>
+                      <zipfileset dir="${basedir}/src" prefix="META-INF/libsrc">
+                        <include name="Makefile" />
                       </zipfileset>
                       <zipfileset filemode="644" src="${project.build.directory}/${project.build.finalName}.orig.jar" dirmode="755">
                       </zipfileset>
@@ -280,7 +304,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>2.5</version>
-
         <reportSets>
          <reportSet>
           <id>aggregate</id>
@@ -308,11 +331,11 @@
 	          <windowtitle>${project.name} ${project.version} API Reference</windowtitle>
 	          <additionalparam>
 	            -link http://java.sun.com/javase/6/docs/api/
+	            -link http://jboss.org/file-access/default/members/netty/freezone/api/3.1/
 
 				-group "GoldenGate Common Digest package" "goldengate.common.digest*"
 
-	            -sourceclasspath ${basedir}/digest/target/classes
-	            -sourceclasspath ${basedir}/common/target/classes
+	            -sourceclasspath ${basedir}/target/classes
 	          </additionalparam>
 	          <encoding>UTF-8</encoding>
 	          <locale>en_US</locale>

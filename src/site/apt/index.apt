@@ -5,7 +5,9 @@ GoldenGate Digest
 
 Dependency
 
-  This project has no external dependency.
+  This project has Netty framework (NIO great framework support at {{http://www.jboss.org/netty}}
+  as dependency. It is tend to be really efficient, both in term of memory, threads and network
+  bandwidth..
   It contains a re implementation of the FastMD5 library from Santeri Paavolainen and Timothy W Macinta.
 
 Specificities
