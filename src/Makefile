@@ -26,7 +26,7 @@
 
 # Adapted version for Nio and other improvements
 # @author Frederic Bregier
-
+# directories must exist: TSYST, ${BASEDIR}target/classes, NETTYJAR
 TARGLINUX=linux_x86/MD5.so
 TARGPPC=darwin_ppc/MD5.jnilib
 TARGWINDOWS=win32_x86/MD5.dll
@@ -36,28 +36,32 @@ BASEDIR=../
 TARGET=${BASEDIR}lib/arch/
 DIRECTORY=goldengate/common/digest
 CLASSNAME=goldengate.common.digest
+NETTYJAR=../lib/netty-3.1.3.GA.jar
 
 # change this to match your system
-JAVADIR=/cygdrive/c/Program\ Files/Java/jdk1.6.0_14/
-TSYST=${TARGET}${TARGWINDOWS}
+JAVADIR=/usr/local/ibm-java-x86_64-60/
+TSYST=${TARGET}${TARGLINUX}
 GCCBIN=gcc
-CPPFLAGS=-I. -g -O3
+CPPFLAGS="-I. -g -O3"
 
 #WINDOWS using Cygwin
-TINCLUDE=-I$(JAVADIR)include/win32
-CPPSHAREDFLAG=-O3 -shared -mwin32 -march=prescott -Wl,--add-stdcall-alias -mno-cygwin -mrtd -Wall 
+#TINCLUDE=-I$(JAVADIR)include/win32
+#CPPSHAREDFLAG=-O3 -shared -mwin32 -march=prescott -Wl,--add-stdcall-alias -mno-cygwin -mrtd -Wall 
+#SEPARATOR=;
 
 #LINUX
-#TINCLUDE=-I$(JAVADIR)include/linux
-#CPPSHAREDFLAG=-O3 -shared
+TINCLUDE=-I$(JAVADIR)include/linux
+CPPSHAREDFLAG=-O3 -shared
+SEPARATOR=:
 
 # AIX
 #TINCLUDE=
 #CPPSHAREDFLAG=-maix64 -mcpu=power4 -O3 -shared
+#SEPARATOR=:
 
 JAVABINDIR=$(JAVADIR)bin/
-JAVAC=$(JAVABINDIR)javac
-JAVAH=$(JAVABINDIR)javah
+JAVAC=$(JAVABINDIR)javac -cp ${NETTYJAR}
+JAVAH=$(JAVABINDIR)javah 
 
 
 all: all_objs
@@ -72,17 +76,17 @@ ALL_OBJS= \
 	${DIRECTORY}/CLIB/MD5.h
 
 ALL_CLASSES= \
-	${BASEDIR}target/classes/${DIRECTORY}/MD5.class \
-	${BASEDIR}target/classes/${DIRECTORY}/MD5State.class
+	${BASEDIR}target/classes/${DIRECTORY}/MD5State.class \
+	${BASEDIR}target/classes/${DIRECTORY}/MD5.class
 
-${BASEDIR}target/${DIRECTORY}/MD5.class: ${DIRECTORY}/MD5.java
-	$(JAVAC) -d ${BASEDIR}target/classes/${DIRECTORY}/ ${DIRECTORY}/MD5.java
+${BASEDIR}target/classes/${DIRECTORY}/MD5.class: ${DIRECTORY}/MD5.java ${BASEDIR}target/classes/${DIRECTORY}/MD5State.class
+	$(JAVAC)${SEPARATOR}${BASEDIR}target/classes/ -d ${BASEDIR}target/classes/ ${DIRECTORY}/MD5.java
 
-${BASEDIR}target/${DIRECTORY}/MD5State.class: ${DIRECTORY}/MD5State.java
-	$(JAVAC) -d ${BASEDIR}target/classes/${DIRECTORY}/ ${DIRECTORY}/MD5State.java
+${BASEDIR}target/classes/${DIRECTORY}/MD5State.class: ${DIRECTORY}/MD5State.java
+	$(JAVAC) -d ${BASEDIR}target/classes/ ${DIRECTORY}/MD5State.java
 
 ${DIRECTORY}/CLIB/MD5.h: ${BASEDIR}target/classes/${DIRECTORY}/MD5.class
-	$(JAVABINDIR)javah -classpath ${BASEDIR}target/classes -force -o ${DIRECTORY}/CLIB/MD5.h -jni ${CLASSNAME}.MD5
+	$(JAVAH) -classpath ${BASEDIR}target/classes -force -o ${DIRECTORY}/CLIB/MD5.h -jni ${CLASSNAME}.MD5
 
 ${TSYST}: ${DIRECTORY}/CLIB/MD5.c ${DIRECTORY}/CLIB/MD5.h
 	${GCCBIN} ${CPPSHAREDFLAG} -I$(JAVADIR)include ${TINCLUDE} ${DIRECTORY}/CLIB/MD5.c -o ${TSYST}

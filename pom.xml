@@ -3,7 +3,7 @@
   <groupId>GoldenGate</groupId>
   <artifactId>GoldenGateDigest</artifactId>
   <name>GoldenGate Digest</name>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <description>This project allows support of Digest (MD5, SHA1, CRC) for Commons GoldenGate project.</description>
   <url>http://openr66.free.fr/GoldenGateDigest</url>
   <inceptionYear>2009</inceptionYear>
@@ -89,7 +89,7 @@
   	<dependency>
       <groupId>org.jboss.netty</groupId>
       <artifactId>netty</artifactId>
-      <version>3.1.2.GA</version>
+      <version>3.1.3.GA</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
