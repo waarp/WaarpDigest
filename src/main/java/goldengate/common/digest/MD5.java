@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.Date;
+import java.util.Arrays;
 
 import javax.crypto.CipherInputStream;
 
@@ -431,9 +431,27 @@ public class MD5 {
                     }
                     TransformJni(stat.state, stat.buffer, 0, 64);
                 }
-                TransformJni(stat.state, buffer, partlen + offset, newlength -
+                i = partlen + ((newlength - partlen) / 64) * 64;
+                
+                // break into chunks to guard against stack overflow in JNI
+                
+                int transformLength = newlength - partlen;
+                int transformOffset = partlen + offset;
+                final int MAX_LENGTH = 65536; // prevent stack overflow in JNI
+                while (true) {
+                    if (transformLength > MAX_LENGTH) {
+                        TransformJni(stat.state, buffer, transformOffset, MAX_LENGTH);
+                        transformLength -= MAX_LENGTH;
+                        transformOffset += MAX_LENGTH;
+                    } else {
+                        TransformJni(stat.state, buffer, transformOffset, transformLength);
+                        break;
+                    }
+                }
+                //Was
+                /*TransformJni(stat.state, buffer, partlen + offset, newlength -
                         partlen);
-                i = partlen + (newlength - partlen) / 64 * 64;
+                i = partlen + (newlength - partlen) / 64 * 64;*/
             } else {
 
                 // update state (using only Java) to reflect input
@@ -790,7 +808,14 @@ public class MD5 {
                 arch_lib_path = new File(new File(new File("lib"), "arch"),
                         "linux_x86");
                 arch_libfile_suffix = ".so";
-
+            }
+            
+            // fill in settings for Linux on amd64
+            
+            else if (os_name.equals("linux") &&
+                     os_arch.equals("amd64")) {
+                arch_lib_path = new File(new File(new File("lib"), "arch"), "linux_amd64");
+                arch_libfile_suffix = ".so"; 
                 // fill in settings for Windows on x86
 
             } else if (os_name.startsWith("windows ") &&
@@ -800,7 +825,15 @@ public class MD5 {
                 arch_lib_path = new File(new File(new File("lib"), "arch"),
                         "win32_x86");
                 arch_libfile_suffix = ".dll";
-
+            }
+            
+            // fill in settings for Windows on amd64
+            
+            else if (os_name.startsWith("windows ") &&
+                     os_arch.equals("amd64")) {
+                arch_lib_path = new File(new File(new File("lib"), "arch"), "win_amd64");
+                arch_libfile_suffix = ".dll"; 
+            
                 // fill in settings Mac OS X on PPC
 
             } else if (os_name.startsWith("mac os x") && os_arch.equals("ppc")) {
@@ -810,7 +843,47 @@ public class MD5 {
 
                 // default to .so files with no architecture specific
                 // subdirectory
-
+            }
+            
+            // fill in settings for Mac OS X on x86
+            
+            else if (os_name.startsWith("mac os x") &&
+                     (os_arch.equals("x86") ||
+                      os_arch.equals("i386") ||
+                      os_arch.equals("i486") ||
+                      os_arch.equals("i586") ||
+                      os_arch.equals("i686"))) {
+                arch_lib_path = new File(new File(new File("lib"), "arch"), "darwin_x86");
+                arch_libfile_suffix = ".jnilib";
+            }
+            
+            // fill in settings for Mac OS X on x86_64
+            
+            else if (os_name.startsWith("mac os x") &&
+                     os_arch.equals("x86_64")) {
+                arch_lib_path = new File(new File(new File("lib"), "arch"), "darwin_x86_64");
+                arch_libfile_suffix = ".jnilib";
+            }
+            
+            // fill in settings for FreeBSD on x86
+            
+            else if (os_name.equals("freebsd") &&
+                (os_arch.equals("x86") ||
+                 os_arch.equals("i386") ||
+                 os_arch.equals("i486") ||
+                 os_arch.equals("i586") ||
+                 os_arch.equals("i686"))) {
+                arch_lib_path = new File(new File(new File("lib"), "arch"), "freebsd_x86");
+                arch_libfile_suffix = ".so"; 
+            }
+            
+            // fill in settings for FreeBSD on amd64
+            
+            else if (os_name.equals("freebsd") &&
+                     os_arch.equals("amd64")) {
+                arch_lib_path = new File(new File(new File("lib"), "arch"), "freebsd_amd64");
+                arch_libfile_suffix = ".so"; 
+            
             } else {
                 arch_libfile_suffix = ".so";
             }
@@ -879,7 +952,7 @@ public class MD5 {
             MD5 md5 = new MD5();
             int read = 0;
             while ((read = in.read(buf)) >= 0) {
-                md5.Update(buf, 0, read);
+                md5.Update(md5.state, buf, 0, read);
             }
             in.close();
             in = null;
@@ -929,7 +1002,7 @@ public class MD5 {
             MD5 md5 = new MD5();
             read = fileChannel.read(bb);
             while (read > 0) {
-                md5.Update(buf, 0, read);
+                md5.Update(md5.state, buf, 0, read);
                 bb.clear();
                 read = fileChannel.read(bb);
             }
@@ -973,7 +1046,7 @@ public class MD5 {
             MD5 md5 = new MD5();
             read = c.read(buf);
             while (read > 0) {
-                md5.Update(buf, 0, read);
+                md5.Update(md5.state, buf, 0, read);
                 read = c.read(buf);
             }
             buf = null;
@@ -996,7 +1069,8 @@ public class MD5 {
      *         equal.
      **/
     public static boolean hashesEqual(byte[] hash1, byte[] hash2) {
-        if (hash1 == null) {
+        return Arrays.equals(hash1, hash2);
+        /*if (hash1 == null) {
             return hash2 == null;
         }
         if (hash2 == null) {
@@ -1011,14 +1085,63 @@ public class MD5 {
         } else if (hash2.length < 16) {
             return false;
         }
+        
         for (int i = 0; i < targ; i ++) {
             if (hash1[i] != hash2[i]) {
                 return false;
             }
         }
-        return true;
+        return true;*/
     }
 
+    private static byte[] salt = {'G','o','l','d','e','n','G','a','t','e'};
+    /**
+     * Crypt a password
+     * @param pwd to crypt
+     * @return the crypted password
+     */
+    public static final String passwdCrypt(String pwd) {
+        MD5 md5 = new MD5();
+        byte [] bpwd = pwd.getBytes();
+        for (int i = 0; i < 16; i++) {
+            md5.Update(md5.state, bpwd, 0, bpwd.length);
+            md5.Update(md5.state, salt, 0, salt.length);
+        }
+        return md5.asHex();
+    }
+    /**
+     * Crypt a password
+     * @param bpwd to crypt
+     * @return the crypted password
+     */
+    public static final byte[] passwdCrypt(byte[] bpwd) {
+        MD5 md5 = new MD5();
+        for (int i = 0; i < 16; i++) {
+            md5.Update(md5.state, bpwd, 0, bpwd.length);
+            md5.Update(md5.state, salt, 0, salt.length);
+        }
+        return md5.Final();
+    }
+    /**
+     * 
+     * @param pwd
+     * @param cryptPwd
+     * @return True if the pwd is comparable with the cryptPwd
+     */
+    public static final boolean equalPasswd(String pwd, String cryptPwd){
+        String asHex = passwdCrypt(pwd);
+        return cryptPwd.equals(asHex);
+    }
+    /**
+     * 
+     * @param pwd
+     * @param cryptPwd
+     * @return True if the pwd is comparable with the cryptPwd
+     */
+    public static final boolean equalPasswd(byte[] pwd, byte[] cryptPwd){
+        byte [] bytes = passwdCrypt(pwd);
+        return Arrays.equals(cryptPwd, bytes);
+    }
     /**
      * Test function
      *
@@ -1027,8 +1150,22 @@ public class MD5 {
      *            Native Library
      */
     public static void main(String argv[]) {
-        Date start = new Date();
+        long start = System.currentTimeMillis();
         if (argv.length < 1) {
+            // Only passwdCrypt test
+            boolean nativeLib = false;
+            //nativeLib = initNativeLibrary("D:\\NEWJARS\\gglib\\win32\\MD5.dll");
+            nativeLib = initNativeLibrary(true);
+            if (!nativeLib) {
+                System.err.println("Native library cannot be load from " +
+                        "D:\\NEWJARS\\gglib\\win32\\MD5.dll");
+            } else {
+                System.out.println("Native library loaded from " + "D:\\NEWJARS\\gglib\\win32\\MD5.dll");
+            }
+            for (int i = 0; i < 1000000; i++) {
+                passwdCrypt("Ceci est mon password!");
+            }
+            System.err.println("Final passwd crypted in "+(System.currentTimeMillis() - start)+"ms is: "+passwdCrypt("Ceci est mon password!"));
             System.err
                     .println("Not enough argument: <full path to the filename to hash> [<full path to the native library>]");
             return;
@@ -1039,8 +1176,9 @@ public class MD5 {
             if (!nativeLib) {
                 System.err.println("Native library cannot be load from " +
                         argv[1]);
+            } else {
+                System.out.println("Native library loaded from " + argv[1]);
             }
-            System.out.println("Native library loaded from " + argv[1]);
         }
         File file = new File(argv[0]);
         byte[] bmd5;
@@ -1056,11 +1194,11 @@ public class MD5 {
             if (nativeLib) {
                 System.out.println("FileInterface MD5 is " + asHex(bmd5) +
                         " using Native Library in " +
-                        (new Date().getTime() - start.getTime()) + " ms");
+                        (System.currentTimeMillis() - start) + " ms");
             } else {
                 System.out.println("FileInterface MD5 is " + asHex(bmd5) +
                         " using Java version in " +
-                        (new Date().getTime() - start.getTime()) + " ms");
+                        (System.currentTimeMillis() - start) + " ms");
             }
         } else {
             System.err.println("Cannot compute md5 for " + argv[1]);

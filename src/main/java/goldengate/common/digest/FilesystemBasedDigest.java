@@ -296,15 +296,61 @@ public class FilesystemBasedDigest {
         return hash;
     }
 
+    private static byte[] salt = {'G','o','l','d','e','n','G','a','t','e'};
+    /**
+     * Crypt a password (not to be used)
+     * @param pwd to crypt
+     * @return the crypted password
+     * @throws IOException 
+     */
+    public static final String passwdCrypt(String pwd) throws IOException {
+        if (useFastMd5) {
+            return MD5.passwdCrypt(pwd);
+        }
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance(ALGO_MD5);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IOException(ALGO_MD5 +
+                    " Algorithm not supported by this JVM", e);
+        }
+        byte [] bpwd = pwd.getBytes();
+        for (int i = 0; i < 16; i++) {
+            digest.update(bpwd, 0, bpwd.length);
+            digest.update(salt, 0, salt.length);
+        }
+        byte []buf = digest.digest();
+        digest = null;
+        return getHex(buf);
+    }
+    /**
+     * 
+     * @param pwd
+     * @param cryptPwd
+     * @return True if the pwd is comparable with the cryptPwd
+     * @throws IOException 
+     */
+    public static final boolean equalPasswd(String pwd, String cryptPwd) throws IOException{
+        String asHex = passwdCrypt(pwd);
+        return cryptPwd.equals(asHex);
+    }
     /**
      * Test function
      *
      * @param argv
      *            with 2 arguments as filename to hash and full path to the
      *            Native Library
+     * @throws IOException 
      */
-    public static void main(String argv[]) {
+    public static void main(String argv[]) throws IOException {
         if (argv.length < 1) {
+            useFastMd5 = true;
+            MD5.initNativeLibrary(true);
+            long start = System.currentTimeMillis();
+            for (int i = 0; i < 1000000; i++) {
+                passwdCrypt("Ceci est mon password!");
+            }
+            System.err.println("Final passwd crypted in "+(System.currentTimeMillis() - start)+"ms is: "+passwdCrypt("Ceci est mon password!"));
             System.err
                     .println("Not enough argument: <full path to the filename to hash> ");
             return;
