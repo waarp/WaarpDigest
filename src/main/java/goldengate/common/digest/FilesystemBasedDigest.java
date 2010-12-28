@@ -29,6 +29,11 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+
+import javax.crypto.CipherInputStream;
+
+import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
  * Class implementing digest like MD5, SHA1. MD5 is based on the Fast MD5
@@ -246,7 +251,86 @@ public class FilesystemBasedDigest {
             throw e;
         }
     }
-
+    /**
+     * Get hash with given {@link ChannelBuffer} (from Netty)
+     *
+     * @param buffer
+     *            ChannelBuffer to use to get the hash
+     * @throws IOException 
+     */
+    public static byte[] getHashMd5(ChannelBuffer buffer) throws IOException {
+        byte[] bytes = new byte[buffer.readableBytes()];
+        buffer.getBytes(buffer.readerIndex(), bytes);
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance(ALGO_MD5);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IOException(ALGO_MD5 +
+                    " Algorithm not supported by this JVM", e);
+        }
+        digest.update(bytes, 0, bytes.length);
+        byte[] buf = digest.digest();
+        return buf;
+    }
+    /**
+     * Calculates and returns the hash of the contents of the given file using
+     * Cipher file access.
+     * @param c as the CipherInputStream
+     * @return the hash from the CipherInputStream
+     * @throws IOException
+     */
+    public static byte[] getHashCipherMd5(CipherInputStream c) throws IOException {
+        if (useFastMd5) {
+            return MD5.getHashCipher(c);
+        }
+        return getHashCipher(c, ALGO_MD5);
+    }
+    /**
+     * Calculates and returns the hash of the contents of the given file using
+     * Cipher file access.
+     * @param c as the CipherInputStream
+     * @return the hash from the CipherInputStream
+     * @throws IOException
+     */
+    public static byte[] getHashCipherSha1(CipherInputStream c) throws IOException {
+        return getHashCipher(c, ALGO_SHA1);
+    }
+    /**
+     * Calculates and returns the hash of the contents of the given file using
+     * Cipher file access.
+     *
+     * @param c
+     *            as the CipherInputStream
+     * @return the hash from the CipherInputStream
+     * @throws IOException
+     **/
+    private static byte[] getHashCipher(CipherInputStream c, String algo) throws IOException {
+        if (c == null) {
+            throw new FileNotFoundException();
+        }
+        try {
+            int buf_size = 65536;
+            byte[] buf = new byte[buf_size];
+            int read = 0;
+            MessageDigest digest = null;
+            try {
+                digest = MessageDigest.getInstance(algo);
+            } catch (NoSuchAlgorithmException e) {
+                throw new IOException(algo +
+                        " Algorithm not supported by this JVM", e);
+            }
+            while ((read = c.read(buf)) >= 0) {
+                digest.update(buf, 0, read);
+            }
+            c.close();
+            buf = null;
+            buf = digest.digest();
+            digest = null;
+            return buf;
+        } catch (IOException e) {
+            throw e;
+        }
+    }
     /**
      * Internal representation of Hexadecimal Code
      */
@@ -298,7 +382,7 @@ public class FilesystemBasedDigest {
 
     private static byte[] salt = {'G','o','l','d','e','n','G','a','t','e'};
     /**
-     * Crypt a password (not to be used)
+     * Crypt a password
      * @param pwd to crypt
      * @return the crypted password
      * @throws IOException 
@@ -324,15 +408,60 @@ public class FilesystemBasedDigest {
         return getHex(buf);
     }
     /**
+     * Crypt a password 
+     * @param pwd to crypt
+     * @return the crypted password
+     * @throws IOException 
+     */
+    public static final byte[] passwdCrypt(byte[] pwd) throws IOException {
+        if (useFastMd5) {
+            return MD5.passwdCrypt(pwd);
+        }
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance(ALGO_MD5);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IOException(ALGO_MD5 +
+                    " Algorithm not supported by this JVM", e);
+        }
+        for (int i = 0; i < 16; i++) {
+            digest.update(pwd, 0, pwd.length);
+            digest.update(salt, 0, salt.length);
+        }
+        byte []buf = digest.digest();
+        digest = null;
+        return buf;
+    }
+    /**
      * 
      * @param pwd
      * @param cryptPwd
      * @return True if the pwd is comparable with the cryptPwd
      * @throws IOException 
      */
-    public static final boolean equalPasswd(String pwd, String cryptPwd) throws IOException{
-        String asHex = passwdCrypt(pwd);
+    public static final boolean equalPasswd(String pwd, String cryptPwd) {
+        String asHex;
+        try {
+            asHex = passwdCrypt(pwd);
+        } catch (IOException e) {
+            return false;
+        }
         return cryptPwd.equals(asHex);
+    }
+    /**
+     * 
+     * @param pwd
+     * @param cryptPwd
+     * @return True if the pwd is comparable with the cryptPwd
+     */
+    public static final boolean equalPasswd(byte[] pwd, byte[] cryptPwd) {
+        byte[] bytes;
+        try {
+            bytes = passwdCrypt(pwd);
+        } catch (IOException e) {
+            return false;
+        }
+        return Arrays.equals(cryptPwd, bytes);
     }
     /**
      * Test function
@@ -344,7 +473,7 @@ public class FilesystemBasedDigest {
      */
     public static void main(String argv[]) throws IOException {
         if (argv.length < 1) {
-            useFastMd5 = true;
+            useFastMd5 = false;
             MD5.initNativeLibrary(true);
             long start = System.currentTimeMillis();
             for (int i = 0; i < 1000000; i++) {

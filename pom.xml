@@ -3,7 +3,7 @@
   <groupId>GoldenGate</groupId>
   <artifactId>GoldenGateDigest</artifactId>
   <name>GoldenGate Digest</name>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <description>This project allows support of Digest (MD5, SHA1, CRC) for Commons GoldenGate project.</description>
   <url>http://openr66.free.fr/GoldenGateDigest</url>
   <inceptionYear>2009</inceptionYear>
