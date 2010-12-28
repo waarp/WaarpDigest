@@ -256,17 +256,22 @@ public class FilesystemBasedDigest {
      *
      * @param buffer
      *            ChannelBuffer to use to get the hash
-     * @throws IOException 
      */
-    public static byte[] getHashMd5(ChannelBuffer buffer) throws IOException {
+    public static byte[] getHashMd5(ChannelBuffer buffer) {
+        if (useFastMd5) {
+            MD5 md5 = new MD5();
+            md5.Update(buffer);
+            return md5.Final();
+        }
         byte[] bytes = new byte[buffer.readableBytes()];
         buffer.getBytes(buffer.readerIndex(), bytes);
         MessageDigest digest = null;
         try {
             digest = MessageDigest.getInstance(ALGO_MD5);
         } catch (NoSuchAlgorithmException e) {
-            throw new IOException(ALGO_MD5 +
-                    " Algorithm not supported by this JVM", e);
+            MD5 md5 = new MD5();
+            md5.Update(buffer);
+            return md5.Final();
         }
         digest.update(bytes, 0, bytes.length);
         byte[] buf = digest.digest();
@@ -387,7 +392,7 @@ public class FilesystemBasedDigest {
      * @return the crypted password
      * @throws IOException 
      */
-    public static final String passwdCrypt(String pwd) throws IOException {
+    public static final String passwdCrypt(String pwd) {
         if (useFastMd5) {
             return MD5.passwdCrypt(pwd);
         }
@@ -395,8 +400,7 @@ public class FilesystemBasedDigest {
         try {
             digest = MessageDigest.getInstance(ALGO_MD5);
         } catch (NoSuchAlgorithmException e) {
-            throw new IOException(ALGO_MD5 +
-                    " Algorithm not supported by this JVM", e);
+            return MD5.passwdCrypt(pwd);
         }
         byte [] bpwd = pwd.getBytes();
         for (int i = 0; i < 16; i++) {
@@ -413,7 +417,7 @@ public class FilesystemBasedDigest {
      * @return the crypted password
      * @throws IOException 
      */
-    public static final byte[] passwdCrypt(byte[] pwd) throws IOException {
+    public static final byte[] passwdCrypt(byte[] pwd) {
         if (useFastMd5) {
             return MD5.passwdCrypt(pwd);
         }
@@ -421,8 +425,7 @@ public class FilesystemBasedDigest {
         try {
             digest = MessageDigest.getInstance(ALGO_MD5);
         } catch (NoSuchAlgorithmException e) {
-            throw new IOException(ALGO_MD5 +
-                    " Algorithm not supported by this JVM", e);
+            return MD5.passwdCrypt(pwd);
         }
         for (int i = 0; i < 16; i++) {
             digest.update(pwd, 0, pwd.length);
@@ -441,11 +444,7 @@ public class FilesystemBasedDigest {
      */
     public static final boolean equalPasswd(String pwd, String cryptPwd) {
         String asHex;
-        try {
-            asHex = passwdCrypt(pwd);
-        } catch (IOException e) {
-            return false;
-        }
+        asHex = passwdCrypt(pwd);
         return cryptPwd.equals(asHex);
     }
     /**
@@ -456,12 +455,28 @@ public class FilesystemBasedDigest {
      */
     public static final boolean equalPasswd(byte[] pwd, byte[] cryptPwd) {
         byte[] bytes;
-        try {
-            bytes = passwdCrypt(pwd);
-        } catch (IOException e) {
-            return false;
-        }
+        bytes = passwdCrypt(pwd);
         return Arrays.equals(cryptPwd, bytes);
+    }
+    /**
+     * Initialize the MD5 support
+     * @param luseFastMd5 True will use FastMD5 support, False will use JVM native MD5
+     * @param path If useFastMD5 is True, if path is not null, specify the C Library (optional)
+     * @return True if the native library is loaded
+     */
+    public static boolean initializeMd5(boolean luseFastMd5, String path) {
+        useFastMd5 = luseFastMd5;
+        fastMd5Path = path;
+        if (fastMd5Path == null) {
+            return MD5.initNativeLibrary(true);
+        } else {
+            // If useFastMd5 is false, ignore fastMd5Path later on
+            if (useFastMd5) {
+                return MD5.initNativeLibrary(fastMd5Path);
+            } else {
+                return MD5.initNativeLibrary(true);
+            }
+        }
     }
     /**
      * Test function
@@ -474,7 +489,7 @@ public class FilesystemBasedDigest {
     public static void main(String argv[]) throws IOException {
         if (argv.length < 1) {
             useFastMd5 = false;
-            MD5.initNativeLibrary(true);
+            initializeMd5(false, null);
             long start = System.currentTimeMillis();
             for (int i = 0; i < 1000000; i++) {
                 passwdCrypt("Ceci est mon password!");
@@ -484,8 +499,7 @@ public class FilesystemBasedDigest {
                     .println("Not enough argument: <full path to the filename to hash> ");
             return;
         }
-        MD5
-                .initNativeLibrary("D:/NEWJARS/goldengate/lib/arch/win32_x86/MD5.dll");
+        initializeMd5(true, "D:/NEWJARS/goldengate/lib/arch/win32_x86/MD5.dll");
         File file = new File(argv[0]);
         System.out.println("FileInterface: " + file.getAbsolutePath());
         byte[] bmd5;
