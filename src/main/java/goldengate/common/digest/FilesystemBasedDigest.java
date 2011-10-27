@@ -30,6 +30,9 @@ import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.zip.Adler32;
+import java.util.zip.CRC32;
+import java.util.zip.Checksum;
 
 import javax.crypto.CipherInputStream;
 
@@ -38,20 +41,69 @@ import org.jboss.netty.buffer.ChannelBuffer;
 /**
  * Class implementing digest like MD5, SHA1. MD5 is based on the Fast MD5
  * implementation, without C library support, but can be revert to JVM native
- * digest.
- *
+ * digest.<br><br>
+ * 
+ * Some performance reports: (done using java -server option)
+ * <ul>
+ * <li>File based only:</li>
+ * <ul><li>FastMD5 in C is almost the fastest (+20%), while FastMD5 in Java is the slowest (-20%) and JVM version is in the middle.</li>
+ * <li>If ADLER32 is the referenced time ADLER32=1, CRC32=2.5, MD5=4, SHA1=7, SHA256=11, SHA512=25</li>
+ * </ul>
+ * <li>Buffer based only:</li>
+ * <ul><li>JVM version is the fastest (+20%), while FastMD5 in C or in Java are the same (-20% than JVM).</li>
+ * <li>If ADLER32 is the referenced time ADLER32=1, CRC32=2.5, MD5=4, SHA1=8, SHA256=13, SHA384=29, SHA512=31</li>
+ * </ul></ul>
+ * 
  * @author Frederic Bregier
  *
  */
 public class FilesystemBasedDigest {
     /**
+     * Initialize the MD5 support
+     * @param mustUseFastMd5 True will use FastMD5 support, False will use JVM native MD5
+     * @param path If useFastMD5 is True, if path is not null, specify the C Library (optional), 
+     *          else if null will use the Java implementation
+     * @return True if the native library is loaded
+     */
+    public static boolean initializeMd5(boolean mustUseFastMd5, String path) {
+        useFastMd5 = mustUseFastMd5;
+        fastMd5Path = path;
+        if (fastMd5Path == null) {
+            return MD5.initNativeLibrary(true);
+        } else {
+            // If useFastMd5 is false, ignore fastMd5Path later on
+            if (useFastMd5) {
+                return MD5.initNativeLibrary(fastMd5Path);
+            } else {
+                return MD5.initNativeLibrary(true);
+            }
+        }
+    }
+    /**
+     * All Algo that Digest Class could handle
+     * @author Frederic Bregier
+     *
+     */
+    public static enum DigestAlgo {
+        CRC32("CRC32"), ADLER32("ADLER32"), 
+        MD5("MD5"), MD2("MD2"), SHA1("SHA-1"), 
+        SHA256("SHA-256"), SHA384("SHA-384"), SHA512("SHA-512");
+
+        public String name;
+        
+        private DigestAlgo(String name) {
+            this.name=name;
+        }
+    }
+    /**
      * Should a file MD5 be computed using FastMD5
      */
-    public static boolean useFastMd5 = true;
+    public static boolean useFastMd5 = false;
 
     /**
      * If using Fast MD5, should we used the binary JNI library, empty meaning
-     * no. FastMD5 is up to 50% fastest than JVM.
+     * no. FastMD5 is up to 50% fastest than JVM, but JNI library might be not better
+     * than java FastMD5.
      */
     public static String fastMd5Path = null;
 
@@ -76,15 +128,6 @@ public class FilesystemBasedDigest {
         return MessageDigest.isEqual(bdig1, dig2);
     }
 
-    /**
-     * MD5 Algorithm
-     */
-    private static final String ALGO_MD5 = "MD5";
-
-    /**
-     * SHA-1 Algorithm
-     */
-    private static final String ALGO_SHA1 = "SHA-1";
 
     /**
      * get the byte array of the MD5 for the given FileInterface using Nio
@@ -98,7 +141,7 @@ public class FilesystemBasedDigest {
         if (useFastMd5) {
             return MD5.getHashNio(f);
         }
-        return getHashNio(f, ALGO_MD5);
+        return getHash(f, true, DigestAlgo.MD5);
     }
 
     /**
@@ -113,7 +156,7 @@ public class FilesystemBasedDigest {
         if (useFastMd5) {
             return MD5.getHash(f);
         }
-        return getHash(f, ALGO_MD5);
+        return getHash(f, false, DigestAlgo.MD5);
     }
 
     /**
@@ -125,7 +168,7 @@ public class FilesystemBasedDigest {
      * @throws IOException
      */
     public static byte[] getHashSha1Nio(File f) throws IOException {
-        return getHashNio(f, ALGO_SHA1);
+        return getHash(f, true, DigestAlgo.SHA1);
     }
 
     /**
@@ -137,79 +180,26 @@ public class FilesystemBasedDigest {
      * @throws IOException
      */
     public static byte[] getHashSha1(File f) throws IOException {
-        return getHash(f, ALGO_SHA1);
+        return getHash(f, false, DigestAlgo.SHA1);
     }
-
     /**
-     * Get the Digest for the file using the specified algorithm using Nio
-     * access
-     *
+     * Get the Digest for the file using the specified algorithm using access through NIO or not 
      * @param f
+     * @param nio
      * @param algo
      * @return the digest
      * @throws IOException
      */
-    private static byte[] getHashNio(File f, String algo) throws IOException {
+    public static byte[] getHash(File f, boolean nio, DigestAlgo algo) throws IOException {
         if (!f.exists()) {
             throw new FileNotFoundException(f.toString());
         }
-        InputStream close_me = null;
-        try {
-            long buf_size = f.length();
-            if (buf_size < 512) {
-                buf_size = 512;
+        if (algo == DigestAlgo.MD5 && useFastMd5) {
+            if (nio) {
+                return MD5.getHashNio(f);
+            } else {
+                return MD5.getHash(f);
             }
-            if (buf_size > 65536) {
-                buf_size = 65536;
-            }
-            FileInputStream in = new FileInputStream(f);
-            close_me = in;
-            FileChannel fileChannel = in.getChannel();
-            byte[] buf = new byte[(int) buf_size];
-            ByteBuffer bb = ByteBuffer.wrap(buf);
-            MessageDigest digest = null;
-            try {
-                digest = MessageDigest.getInstance(algo);
-            } catch (NoSuchAlgorithmException e) {
-                throw new IOException(algo +
-                        " Algorithm not supported by this JVM", e);
-            }
-            int size = 0;
-            while ((size = fileChannel.read(bb)) >= 0) {
-                digest.update(buf, 0, size);
-                bb.clear();
-            }
-            fileChannel.close();
-            fileChannel = null;
-            in = null;
-            close_me = null;
-            bb = null;
-            buf = digest.digest();
-            digest = null;
-            return buf;
-        } catch (IOException e) {
-            if (close_me != null) {
-                try {
-                    close_me.close();
-                } catch (Exception e2) {
-                }
-            }
-            throw e;
-        }
-    }
-
-    /**
-     * Get the Digest for the file using the specified algorithm using Standard
-     * access
-     *
-     * @param f
-     * @param algo
-     * @return the digest
-     * @throws IOException
-     */
-    private static byte[] getHash(File f, String algo) throws IOException {
-        if (!f.exists()) {
-            throw new FileNotFoundException(f.toString());
         }
         InputStream close_me = null;
         try {
@@ -223,23 +213,103 @@ public class FilesystemBasedDigest {
             byte[] buf = new byte[(int) buf_size];
             FileInputStream in = new FileInputStream(f);
             close_me = in;
-            MessageDigest digest = null;
-            try {
-                digest = MessageDigest.getInstance(algo);
-            } catch (NoSuchAlgorithmException e) {
-                throw new IOException(algo +
-                        " Algorithm not supported by this JVM", e);
+            if (nio) { // NIO
+                FileChannel fileChannel = in.getChannel();
+                ByteBuffer bb = ByteBuffer.wrap(buf);
+                Checksum checksum = null;
+                int size = 0;
+                switch (algo) {
+                    case ADLER32:
+                        checksum = new Adler32();
+                    case CRC32:
+                        if (checksum == null) { // Not ADLER32
+                            checksum = new CRC32();
+                        }
+                        while ((size = fileChannel.read(bb)) >= 0) {
+                            checksum.update(buf, 0, size);
+                            bb.clear();
+                        }
+                        fileChannel.close();
+                        fileChannel = null;
+                        bb = null;
+                        buf = Long.toOctalString(checksum.getValue()).getBytes();
+                        checksum = null;                        
+                        break;
+                    case MD5:
+                    case MD2:
+                    case SHA1:
+                    case SHA256:
+                    case SHA384:
+                    case SHA512:
+                        String algoname = algo.name;
+                        MessageDigest digest = null;
+                        try {
+                            digest = MessageDigest.getInstance(algoname);
+                        } catch (NoSuchAlgorithmException e) {
+                            throw new IOException(algo +
+                                    " Algorithm not supported by this JVM", e);
+                        }
+                        while ((size = fileChannel.read(bb)) >= 0) {
+                            digest.update(buf, 0, size);
+                            bb.clear();
+                        }
+                        fileChannel.close();
+                        fileChannel = null;
+                        bb = null;
+                        buf = digest.digest();
+                        digest = null;                        
+                        break;
+                    default:
+                        throw new IOException(algo.name +
+                                " Algorithm not supported by this JVM");
+                }
+            } else { // Not NIO
+                Checksum checksum = null;
+                int size = 0;
+                switch (algo) {
+                    case ADLER32:
+                        checksum = new Adler32();
+                    case CRC32:
+                        if (checksum == null) { // not ADLER32
+                            checksum = new CRC32();
+                        }
+                        while ((size = in.read(buf)) >= 0) {
+                            checksum.update(buf, 0, size);
+                        }
+                        in.close();
+                        buf = null;
+                        buf = Long.toOctalString(checksum.getValue()).getBytes();
+                        checksum = null;                        
+                        break;
+                    case MD5:
+                    case MD2:
+                    case SHA1:
+                    case SHA256:
+                    case SHA384:
+                    case SHA512:
+                        String algoname = algo.name;
+                        MessageDigest digest = null;
+                        try {
+                            digest = MessageDigest.getInstance(algoname);
+                        } catch (NoSuchAlgorithmException e) {
+                            throw new IOException(algo +
+                                    " Algorithm not supported by this JVM", e);
+                        }
+                        while ((size = in.read(buf)) >= 0) {
+                            digest.update(buf, 0, size);
+                        }
+                        in.close();
+                        buf = null;
+                        buf = digest.digest();
+                        digest = null;                
+                        break;
+                    default:
+                        throw new IOException(algo.name +
+                                " Algorithm not supported by this JVM");
+                }
             }
-            int read = 0;
-            while ((read = in.read(buf)) >= 0) {
-                digest.update(buf, 0, read);
-            }
-            in.close();
             in = null;
             close_me = null;
-            buf = null;
-            buf = digest.digest();
-            digest = null;
             return buf;
         } catch (IOException e) {
             if (close_me != null) {
@@ -249,6 +319,63 @@ public class FilesystemBasedDigest {
                 }
             }
             throw e;
+        }        
+    }
+    /**
+     * Get hash with given {@link ChannelBuffer} (from Netty)
+     * 
+     * @param buffer
+     * @param algo
+     * @return the hash
+     * @throws IOException 
+     */
+    public static byte[] getHash(ChannelBuffer buffer, DigestAlgo algo) throws IOException {
+        Checksum checksum = null;
+        byte[] bytes = null;
+        switch (algo) {
+            case ADLER32:
+                checksum = new Adler32();
+            case CRC32:
+                if (checksum == null) { // not ADLER32
+                    checksum = new CRC32();
+                }
+                bytes = new byte[buffer.readableBytes()];
+                buffer.getBytes(buffer.readerIndex(), bytes);
+                checksum.update(bytes, 0, bytes.length);
+                bytes = null;
+                bytes = Long.toOctalString(checksum.getValue()).getBytes();
+                checksum = null;
+                return bytes;
+            case MD5:
+                if (useFastMd5) {
+                    MD5 md5 = new MD5();
+                    md5.Update(buffer);
+                    bytes = md5.Final();
+                    md5 = null;
+                    return bytes;
+                }
+            case MD2:
+            case SHA1:
+            case SHA256:
+            case SHA384:
+            case SHA512:
+                String algoname = algo.name;
+                bytes = new byte[buffer.readableBytes()];
+                buffer.getBytes(buffer.readerIndex(), bytes);
+                MessageDigest digest = null;
+                try {
+                    digest = MessageDigest.getInstance(algoname);
+                } catch (NoSuchAlgorithmException e) {
+                    throw new IOException(algoname +
+                            " Algorithm not supported by this JVM", e);
+                }
+                digest.update(bytes, 0, bytes.length);
+                bytes = digest.digest();
+                digest = null;
+                return bytes;
+            default:
+                throw new IOException(algo.name +
+                        " Algorithm not supported by this JVM");            
         }
     }
     /**
@@ -256,26 +383,18 @@ public class FilesystemBasedDigest {
      *
      * @param buffer
      *            ChannelBuffer to use to get the hash
+     * @return the hash
      */
     public static byte[] getHashMd5(ChannelBuffer buffer) {
-        if (useFastMd5) {
-            MD5 md5 = new MD5();
-            md5.Update(buffer);
-            return md5.Final();
-        }
-        byte[] bytes = new byte[buffer.readableBytes()];
-        buffer.getBytes(buffer.readerIndex(), bytes);
-        MessageDigest digest = null;
         try {
-            digest = MessageDigest.getInstance(ALGO_MD5);
-        } catch (NoSuchAlgorithmException e) {
+            return getHash(buffer, DigestAlgo.MD5);
+        } catch (IOException e) {
             MD5 md5 = new MD5();
             md5.Update(buffer);
-            return md5.Final();
+            byte [] bytes = md5.Final();
+            md5 = null;
+            return bytes;
         }
-        digest.update(bytes, 0, bytes.length);
-        byte[] buf = digest.digest();
-        return buf;
     }
     /**
      * Calculates and returns the hash of the contents of the given file using
@@ -288,7 +407,7 @@ public class FilesystemBasedDigest {
         if (useFastMd5) {
             return MD5.getHashCipher(c);
         }
-        return getHashCipher(c, ALGO_MD5);
+        return getHashCipher(c, DigestAlgo.MD5);
     }
     /**
      * Calculates and returns the hash of the contents of the given file using
@@ -298,42 +417,69 @@ public class FilesystemBasedDigest {
      * @throws IOException
      */
     public static byte[] getHashCipherSha1(CipherInputStream c) throws IOException {
-        return getHashCipher(c, ALGO_SHA1);
+        return getHashCipher(c, DigestAlgo.SHA1);
     }
     /**
      * Calculates and returns the hash of the contents of the given file using
      * Cipher file access.
      *
-     * @param c
-     *            as the CipherInputStream
+     * @param c as the CipherInputStream
+     * @param algo
      * @return the hash from the CipherInputStream
      * @throws IOException
-     **/
-    private static byte[] getHashCipher(CipherInputStream c, String algo) throws IOException {
+     */
+    public static byte[] getHashCipher(CipherInputStream c, DigestAlgo algo) throws IOException {
         if (c == null) {
             throw new FileNotFoundException();
         }
-        try {
-            int buf_size = 65536;
-            byte[] buf = new byte[buf_size];
-            int read = 0;
-            MessageDigest digest = null;
-            try {
-                digest = MessageDigest.getInstance(algo);
-            } catch (NoSuchAlgorithmException e) {
-                throw new IOException(algo +
-                        " Algorithm not supported by this JVM", e);
-            }
-            while ((read = c.read(buf)) >= 0) {
-                digest.update(buf, 0, read);
-            }
-            c.close();
-            buf = null;
-            buf = digest.digest();
-            digest = null;
-            return buf;
-        } catch (IOException e) {
-            throw e;
+        int buf_size = 65536;
+        byte[] buf = new byte[buf_size];
+        int read = 0;
+        Checksum checksum = null;
+        switch (algo) {
+            case ADLER32:
+                checksum = new Adler32();
+            case CRC32:
+                if (checksum == null) { // not ADLER32
+                    checksum = new CRC32();
+                }
+                while ((read = c.read(buf)) >= 0) {
+                    checksum.update(buf, 0, read);
+                }
+                c.close();
+                buf = null;
+                buf = Long.toOctalString(checksum.getValue()).getBytes();
+                checksum = null;                        
+                return buf;
+            case MD5:
+                if (useFastMd5) {
+                    buf = null;
+                    return MD5.getHashCipher(c);
+                }
+            case MD2:
+            case SHA1:
+            case SHA256:
+            case SHA384:
+            case SHA512:
+                String algoname = algo.name;
+                MessageDigest digest = null;
+                try {
+                    digest = MessageDigest.getInstance(algoname);
+                } catch (NoSuchAlgorithmException e) {
+                    throw new IOException(algoname +
+                            " Algorithm not supported by this JVM", e);
+                }
+                while ((read = c.read(buf)) >= 0) {
+                    digest.update(buf, 0, read);
+                }
+                c.close();
+                buf = null;
+                buf = digest.digest();
+                digest = null;
+                return buf;
+            default:
+                throw new IOException(algo.name +
+                        " Algorithm not supported by this JVM");
         }
     }
     /**
@@ -398,7 +544,7 @@ public class FilesystemBasedDigest {
         }
         MessageDigest digest = null;
         try {
-            digest = MessageDigest.getInstance(ALGO_MD5);
+            digest = MessageDigest.getInstance(DigestAlgo.MD5.name);
         } catch (NoSuchAlgorithmException e) {
             return MD5.passwdCrypt(pwd);
         }
@@ -423,7 +569,7 @@ public class FilesystemBasedDigest {
         }
         MessageDigest digest = null;
         try {
-            digest = MessageDigest.getInstance(ALGO_MD5);
+            digest = MessageDigest.getInstance(DigestAlgo.MD5.name);
         } catch (NoSuchAlgorithmException e) {
             return MD5.passwdCrypt(pwd);
         }
@@ -459,26 +605,6 @@ public class FilesystemBasedDigest {
         return Arrays.equals(cryptPwd, bytes);
     }
     /**
-     * Initialize the MD5 support
-     * @param luseFastMd5 True will use FastMD5 support, False will use JVM native MD5
-     * @param path If useFastMD5 is True, if path is not null, specify the C Library (optional)
-     * @return True if the native library is loaded
-     */
-    public static boolean initializeMd5(boolean luseFastMd5, String path) {
-        useFastMd5 = luseFastMd5;
-        fastMd5Path = path;
-        if (fastMd5Path == null) {
-            return MD5.initNativeLibrary(true);
-        } else {
-            // If useFastMd5 is false, ignore fastMd5Path later on
-            if (useFastMd5) {
-                return MD5.initNativeLibrary(fastMd5Path);
-            } else {
-                return MD5.initNativeLibrary(true);
-            }
-        }
-    }
-    /**
      * Test function
      *
      * @param argv
@@ -499,7 +625,8 @@ public class FilesystemBasedDigest {
                     .println("Not enough argument: <full path to the filename to hash> ");
             return;
         }
-        initializeMd5(true, "D:/NEWJARS/goldengate/lib/arch/win32_x86/MD5.dll");
+        //initializeMd5(true, "D:/NEWJARS/goldengate/lib/arch/win32_x86/MD5.dll");
+        initializeMd5(true, null);
         File file = new File(argv[0]);
         System.out.println("FileInterface: " + file.getAbsolutePath());
         byte[] bmd5;
@@ -510,7 +637,7 @@ public class FilesystemBasedDigest {
             bmd5 = getHashMd5Nio(file);
         } catch (IOException e1) {
             System.err
-                    .println("Cannot compute " + ALGO_MD5 + " for " + argv[1]);
+                    .println("Cannot compute " + DigestAlgo.MD5.name + " for " + argv[1]);
             return;
         }
         long end = System.currentTimeMillis();
@@ -526,13 +653,13 @@ public class FilesystemBasedDigest {
             try {
                 bmd5 = getHashMd5Nio(file);
             } catch (IOException e1) {
-                System.err.println("Cannot compute " + ALGO_MD5 + " for " +
+                System.err.println("Cannot compute " + DigestAlgo.MD5.name + " for " +
                         argv[1]);
                 return;
             }
         }
         end = System.currentTimeMillis();
-        System.out.println("Algo Nio JVM " + ALGO_MD5 + " is " + getHex(bmd5) +
+        System.out.println("Algo Nio JVM " + DigestAlgo.MD5.name + " is " + getHex(bmd5) +
                 " in " + (end - start) + " ms");
         // Fast Nio MD5
         useFastMd5 = true;
@@ -541,13 +668,13 @@ public class FilesystemBasedDigest {
             try {
                 bmd5 = getHashMd5Nio(file);
             } catch (IOException e1) {
-                System.err.println("Cannot compute " + ALGO_MD5 + " for " +
+                System.err.println("Cannot compute " + DigestAlgo.MD5.name + " for " +
                         argv[1]);
                 return;
             }
         }
         end = System.currentTimeMillis();
-        System.out.println("Algo Nio Fast " + ALGO_MD5 + " is " + getHex(bmd5) +
+        System.out.println("Algo Nio Fast " + DigestAlgo.MD5.name + " is " + getHex(bmd5) +
                 " in " + (end - start) + " ms");
 
         // JVM MD5
@@ -557,13 +684,13 @@ public class FilesystemBasedDigest {
             try {
                 bmd5 = getHashMd5(file);
             } catch (IOException e1) {
-                System.err.println("Cannot compute " + ALGO_MD5 + " for " +
+                System.err.println("Cannot compute " + DigestAlgo.MD5.name + " for " +
                         argv[1]);
                 return;
             }
         }
         end = System.currentTimeMillis();
-        System.out.println("Algo JVM " + ALGO_MD5 + " is " + getHex(bmd5) +
+        System.out.println("Algo JVM " + DigestAlgo.MD5.name + " is " + getHex(bmd5) +
                 " in " + (end - start) + " ms");
         // Fast MD5
         useFastMd5 = true;
@@ -572,13 +699,13 @@ public class FilesystemBasedDigest {
             try {
                 bmd5 = getHashMd5(file);
             } catch (IOException e1) {
-                System.err.println("Cannot compute " + ALGO_MD5 + " for " +
+                System.err.println("Cannot compute " + DigestAlgo.MD5.name + " for " +
                         argv[1]);
                 return;
             }
         }
         end = System.currentTimeMillis();
-        System.out.println("Algo Fast " + ALGO_MD5 + " is " + getHex(bmd5) +
+        System.out.println("Algo Fast " + DigestAlgo.MD5.name + " is " + getHex(bmd5) +
                 " in " + (end - start) + " ms");
 
         // JVM Nio SHA1
@@ -587,13 +714,13 @@ public class FilesystemBasedDigest {
             try {
                 bmd5 = getHashSha1Nio(file);
             } catch (IOException e1) {
-                System.err.println("Cannot compute " + ALGO_SHA1 + " for " +
+                System.err.println("Cannot compute " + DigestAlgo.SHA1.name + " for " +
                         argv[1]);
                 return;
             }
         }
         end = System.currentTimeMillis();
-        System.out.println("Algo Nio JVM " + ALGO_SHA1 + " is " + getHex(bmd5) +
+        System.out.println("Algo Nio JVM " + DigestAlgo.SHA1.name + " is " + getHex(bmd5) +
                 " in " + (end - start) + " ms");
         // JVM SHA1
         start = System.currentTimeMillis();
@@ -601,13 +728,125 @@ public class FilesystemBasedDigest {
             try {
                 bmd5 = getHashSha1(file);
             } catch (IOException e1) {
-                System.err.println("Cannot compute " + ALGO_SHA1 + " for " +
+                System.err.println("Cannot compute " + DigestAlgo.SHA1.name + " for " +
                         argv[1]);
                 return;
             }
         }
         end = System.currentTimeMillis();
-        System.out.println("Algo JVM " + ALGO_SHA1 + " is " + getHex(bmd5) +
+        System.out.println("Algo JVM " + DigestAlgo.SHA1.name + " is " + getHex(bmd5) +
+                " in " + (end - start) + " ms");
+        // JVM Nio SHA256
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100; i ++) {
+            try {
+                bmd5 = getHash(file,true,DigestAlgo.SHA256);
+            } catch (IOException e1) {
+                System.err.println("Cannot compute " + DigestAlgo.SHA256.name + " for " +
+                        argv[1]);
+                return;
+            }
+        }
+        end = System.currentTimeMillis();
+        System.out.println("Algo Nio JVM " + DigestAlgo.SHA256.name + " is " + getHex(bmd5) +
+                " in " + (end - start) + " ms");
+        // JVM SHA256
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100; i ++) {
+            try {
+                bmd5 = getHash(file,false,DigestAlgo.SHA256);
+            } catch (IOException e1) {
+                System.err.println("Cannot compute " + DigestAlgo.SHA256.name + " for " +
+                        argv[1]);
+                return;
+            }
+        }
+        end = System.currentTimeMillis();
+        System.out.println("Algo JVM " + DigestAlgo.SHA256.name + " is " + getHex(bmd5) +
+                " in " + (end - start) + " ms");
+        // JVM Nio SHA512
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100; i ++) {
+            try {
+                bmd5 = getHash(file,true,DigestAlgo.SHA512);
+            } catch (IOException e1) {
+                System.err.println("Cannot compute " + DigestAlgo.SHA512.name + " for " +
+                        argv[1]);
+                return;
+            }
+        }
+        end = System.currentTimeMillis();
+        System.out.println("Algo Nio JVM " + DigestAlgo.SHA512.name + " is " + getHex(bmd5) +
+                " in " + (end - start) + " ms");
+        // JVM SHA512
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100; i ++) {
+            try {
+                bmd5 = getHash(file,false,DigestAlgo.SHA512);
+            } catch (IOException e1) {
+                System.err.println("Cannot compute " + DigestAlgo.SHA512.name + " for " +
+                        argv[1]);
+                return;
+            }
+        }
+        end = System.currentTimeMillis();
+        System.out.println("Algo JVM " + DigestAlgo.SHA512.name + " is " + getHex(bmd5) +
+                " in " + (end - start) + " ms");
+        // JVM Nio CRC32
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100; i ++) {
+            try {
+                bmd5 = getHash(file,true,DigestAlgo.CRC32);
+            } catch (IOException e1) {
+                System.err.println("Cannot compute " + DigestAlgo.CRC32.name + " for " +
+                        argv[1]);
+                return;
+            }
+        }
+        end = System.currentTimeMillis();
+        System.out.println("Algo Nio JVM " + DigestAlgo.CRC32.name + " is " + getHex(bmd5) +
+                " in " + (end - start) + " ms");
+        // JVM CRC32
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100; i ++) {
+            try {
+                bmd5 = getHash(file,false,DigestAlgo.CRC32);
+            } catch (IOException e1) {
+                System.err.println("Cannot compute " + DigestAlgo.CRC32.name + " for " +
+                        argv[1]);
+                return;
+            }
+        }
+        end = System.currentTimeMillis();
+        System.out.println("Algo JVM " + DigestAlgo.CRC32.name + " is " + getHex(bmd5) +
+                " in " + (end - start) + " ms");
+        // JVM Nio ADLER
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100; i ++) {
+            try {
+                bmd5 = getHash(file,true,DigestAlgo.ADLER32);
+            } catch (IOException e1) {
+                System.err.println("Cannot compute " + DigestAlgo.ADLER32.name + " for " +
+                        argv[1]);
+                return;
+            }
+        }
+        end = System.currentTimeMillis();
+        System.out.println("Algo Nio JVM " + DigestAlgo.ADLER32.name + " is " + getHex(bmd5) +
+                " in " + (end - start) + " ms");
+        // JVM ADLER
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100; i ++) {
+            try {
+                bmd5 = getHash(file,false,DigestAlgo.ADLER32);
+            } catch (IOException e1) {
+                System.err.println("Cannot compute " + DigestAlgo.ADLER32.name + " for " +
+                        argv[1]);
+                return;
+            }
+        }
+        end = System.currentTimeMillis();
+        System.out.println("Algo JVM " + DigestAlgo.ADLER32.name + " is " + getHex(bmd5) +
                 " in " + (end - start) + " ms");
     }
 
