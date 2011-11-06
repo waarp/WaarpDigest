@@ -5,6 +5,9 @@
 		<author email="fredbregier@free.fr">Frederic Bregier</author>
 	</properties>
 	<body>
+		<release version="1.0.4" date="2011-11-05" description="Add functionalities">
+			<action dev="Frederic Bregier" type="fix">Fix of DigestAlgo definitions</action>
+		</release>
 		<release version="1.0.3" date="2011-10-27" description="Add functionalities">
 			<action dev="Frederic Bregier" type="add">Add functionalities</action>
 		</release>

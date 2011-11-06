@@ -85,14 +85,29 @@ public class FilesystemBasedDigest {
      *
      */
     public static enum DigestAlgo {
-        CRC32("CRC32"), ADLER32("ADLER32"), 
-        MD5("MD5"), MD2("MD2"), SHA1("SHA-1"), 
-        SHA256("SHA-256"), SHA384("SHA-384"), SHA512("SHA-512");
+        CRC32("CRC32",11), ADLER32("ADLER32",9), 
+        MD5("MD5",16), MD2("MD2",16), SHA1("SHA-1", 20), 
+        SHA256("SHA-256",32), SHA384("SHA-384",48), SHA512("SHA-512",64);
 
         public String name;
-        
-        private DigestAlgo(String name) {
+        public int byteSize;
+        /**
+         * 
+         * @return the length in bytes of one Digest
+         */
+        public int getByteSize() {
+            return byteSize;
+        }
+        /**
+         * 
+         * @return the length in Hex form of one Digest
+         */
+        public int getHexSize() {
+            return byteSize*2;
+        }
+        private DigestAlgo(String name, int byteSize) {
             this.name=name;
+            this.byteSize=byteSize;
         }
     }
     /**
@@ -660,6 +675,7 @@ public class FilesystemBasedDigest {
         }
         end = System.currentTimeMillis();
         System.out.println("Algo Nio JVM " + DigestAlgo.MD5.name + " is " + getHex(bmd5) +
+                "("+bmd5.length+")"+
                 " in " + (end - start) + " ms");
         // Fast Nio MD5
         useFastMd5 = true;
@@ -675,6 +691,7 @@ public class FilesystemBasedDigest {
         }
         end = System.currentTimeMillis();
         System.out.println("Algo Nio Fast " + DigestAlgo.MD5.name + " is " + getHex(bmd5) +
+                "("+bmd5.length+")"+
                 " in " + (end - start) + " ms");
 
         // JVM MD5
@@ -691,6 +708,7 @@ public class FilesystemBasedDigest {
         }
         end = System.currentTimeMillis();
         System.out.println("Algo JVM " + DigestAlgo.MD5.name + " is " + getHex(bmd5) +
+                "("+bmd5.length+")"+
                 " in " + (end - start) + " ms");
         // Fast MD5
         useFastMd5 = true;
@@ -706,6 +724,7 @@ public class FilesystemBasedDigest {
         }
         end = System.currentTimeMillis();
         System.out.println("Algo Fast " + DigestAlgo.MD5.name + " is " + getHex(bmd5) +
+                "("+bmd5.length+")"+
                 " in " + (end - start) + " ms");
 
         // JVM Nio SHA1
@@ -721,6 +740,7 @@ public class FilesystemBasedDigest {
         }
         end = System.currentTimeMillis();
         System.out.println("Algo Nio JVM " + DigestAlgo.SHA1.name + " is " + getHex(bmd5) +
+                "("+bmd5.length+")"+
                 " in " + (end - start) + " ms");
         // JVM SHA1
         start = System.currentTimeMillis();
@@ -735,6 +755,7 @@ public class FilesystemBasedDigest {
         }
         end = System.currentTimeMillis();
         System.out.println("Algo JVM " + DigestAlgo.SHA1.name + " is " + getHex(bmd5) +
+                "("+bmd5.length+")"+
                 " in " + (end - start) + " ms");
         // JVM Nio SHA256
         start = System.currentTimeMillis();
@@ -749,6 +770,7 @@ public class FilesystemBasedDigest {
         }
         end = System.currentTimeMillis();
         System.out.println("Algo Nio JVM " + DigestAlgo.SHA256.name + " is " + getHex(bmd5) +
+                "("+bmd5.length+")"+
                 " in " + (end - start) + " ms");
         // JVM SHA256
         start = System.currentTimeMillis();
@@ -763,6 +785,7 @@ public class FilesystemBasedDigest {
         }
         end = System.currentTimeMillis();
         System.out.println("Algo JVM " + DigestAlgo.SHA256.name + " is " + getHex(bmd5) +
+                "("+bmd5.length+")"+
                 " in " + (end - start) + " ms");
         // JVM Nio SHA512
         start = System.currentTimeMillis();
@@ -777,6 +800,7 @@ public class FilesystemBasedDigest {
         }
         end = System.currentTimeMillis();
         System.out.println("Algo Nio JVM " + DigestAlgo.SHA512.name + " is " + getHex(bmd5) +
+                "("+bmd5.length+")"+
                 " in " + (end - start) + " ms");
         // JVM SHA512
         start = System.currentTimeMillis();
@@ -791,6 +815,7 @@ public class FilesystemBasedDigest {
         }
         end = System.currentTimeMillis();
         System.out.println("Algo JVM " + DigestAlgo.SHA512.name + " is " + getHex(bmd5) +
+                "("+bmd5.length+")"+
                 " in " + (end - start) + " ms");
         // JVM Nio CRC32
         start = System.currentTimeMillis();
@@ -805,6 +830,7 @@ public class FilesystemBasedDigest {
         }
         end = System.currentTimeMillis();
         System.out.println("Algo Nio JVM " + DigestAlgo.CRC32.name + " is " + getHex(bmd5) +
+                "("+bmd5.length+")"+
                 " in " + (end - start) + " ms");
         // JVM CRC32
         start = System.currentTimeMillis();
@@ -819,6 +845,7 @@ public class FilesystemBasedDigest {
         }
         end = System.currentTimeMillis();
         System.out.println("Algo JVM " + DigestAlgo.CRC32.name + " is " + getHex(bmd5) +
+                "("+bmd5.length+")"+
                 " in " + (end - start) + " ms");
         // JVM Nio ADLER
         start = System.currentTimeMillis();
@@ -833,6 +860,7 @@ public class FilesystemBasedDigest {
         }
         end = System.currentTimeMillis();
         System.out.println("Algo Nio JVM " + DigestAlgo.ADLER32.name + " is " + getHex(bmd5) +
+                "("+bmd5.length+")"+
                 " in " + (end - start) + " ms");
         // JVM ADLER
         start = System.currentTimeMillis();
@@ -847,6 +875,37 @@ public class FilesystemBasedDigest {
         }
         end = System.currentTimeMillis();
         System.out.println("Algo JVM " + DigestAlgo.ADLER32.name + " is " + getHex(bmd5) +
+                "("+bmd5.length+")"+
+                " in " + (end - start) + " ms");
+        // JVM MD2
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100; i ++) {
+            try {
+                bmd5 = getHash(file,false,DigestAlgo.MD2);
+            } catch (IOException e1) {
+                System.err.println("Cannot compute " + DigestAlgo.MD2.name + " for " +
+                        argv[1]);
+                return;
+            }
+        }
+        end = System.currentTimeMillis();
+        System.out.println("Algo JVM " + DigestAlgo.MD2.name + " is " + getHex(bmd5) +
+                "("+bmd5.length+")"+
+                " in " + (end - start) + " ms");
+        // JVM SHA-384
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100; i ++) {
+            try {
+                bmd5 = getHash(file,false,DigestAlgo.SHA384);
+            } catch (IOException e1) {
+                System.err.println("Cannot compute " + DigestAlgo.SHA384.name + " for " +
+                        argv[1]);
+                return;
+            }
+        }
+        end = System.currentTimeMillis();
+        System.out.println("Algo JVM " + DigestAlgo.SHA384.name + " is " + getHex(bmd5) +
+                "("+bmd5.length+")"+
                 " in " + (end - start) + " ms");
     }
 
