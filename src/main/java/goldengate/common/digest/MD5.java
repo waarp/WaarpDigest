@@ -30,8 +30,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
 
-import javax.crypto.CipherInputStream;
-
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -657,7 +655,7 @@ public class MD5 {
      *            Array of bytes to convert to hex-string
      * @return Generated hex string
      */
-    public static String asHex(byte hash[]) {
+    public static final String asHex(byte hash[]) {
         char buf[] = new char[hash.length * 2];
         for (int i = 0, x = 0; i < hash.length; i ++) {
             buf[x ++] = HEX_CHARS[hash[i] >>> 4 & 0xf];
@@ -674,7 +672,7 @@ public class MD5 {
      *            hex string
      * @return Array of bytes converted from hex-string
      */
-    public static byte[] asByte(String buf) {
+    public static final byte[] asByte(String buf) {
         byte from[] = buf.getBytes();
         byte hash[] = new byte[from.length / 2];
         for (int i = 0, x = 0; i < hash.length; i ++) {
@@ -1026,6 +1024,39 @@ public class MD5 {
         }
     }
 
+
+    /**
+     * Calculates and returns the hash of the contents of the given stream.
+     *
+     * @param stream
+     *            Stream to hash
+     * @return the hash from the given stream
+     * @throws IOException
+     **/
+    public static byte[] getHash(InputStream stream) throws IOException {
+        try {
+            long buf_size = 65536;
+            byte[] buf = new byte[(int) buf_size];
+            MD5 md5 = new MD5();
+            int read = 0;
+            while ((read = stream.read(buf)) >= 0) {
+                md5.Update(md5.state, buf, 0, read);
+            }
+            stream.close();
+            buf = null;
+            buf = md5.Final();
+            return buf;
+        } catch (IOException e) {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (Exception e2) {
+                }
+            }
+            throw e;
+        }
+    }
+
     /**
      * Calculates and returns the hash of the contents of the given file using
      * Cipher file access.
@@ -1035,6 +1066,7 @@ public class MD5 {
      * @return the hash from the CipherInputStream
      * @throws IOException
      **/
+    /*
     public static byte[] getHashCipher(CipherInputStream c) throws IOException {
         if (c == null) {
             throw new FileNotFoundException();
@@ -1057,7 +1089,8 @@ public class MD5 {
             throw e;
         }
     }
-
+    */
+    
     /**
      * Test if both hashes are equal
      *
