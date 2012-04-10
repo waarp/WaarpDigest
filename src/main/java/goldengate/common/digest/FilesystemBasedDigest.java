@@ -56,6 +56,112 @@ import org.jboss.netty.buffer.ChannelBuffer;
  *
  */
 public class FilesystemBasedDigest {
+    
+    protected MD5 md5 = null;
+    protected Checksum checksum = null;
+    protected MessageDigest digest = null;
+    protected DigestAlgo algo = null;
+    /**
+     * Constructor of an independent Digest
+     * @param algo
+     * @throws NoSuchAlgorithmException
+     */
+    public FilesystemBasedDigest(DigestAlgo algo) throws NoSuchAlgorithmException {
+        initialize(algo);
+    }
+    /**
+     * (Re)Initialize the digest
+     * @throws NoSuchAlgorithmException
+     */
+    public void initialize() throws NoSuchAlgorithmException {
+        if (algo == DigestAlgo.MD5 && useFastMd5) {
+            md5 = new MD5();
+            return;
+        }
+        switch (algo) {
+            case ADLER32:
+                checksum = new Adler32();
+                return;
+            case CRC32:
+                checksum = new CRC32();
+                return;
+            case MD5:
+            case MD2:
+            case SHA1:
+            case SHA256:
+            case SHA384:
+            case SHA512:
+                String algoname = algo.name;
+                try {
+                    digest = MessageDigest.getInstance(algoname);
+                } catch (NoSuchAlgorithmException e) {
+                    throw new NoSuchAlgorithmException(algo +
+                            " Algorithm not supported by this JVM", e);
+                }
+                return;
+            default:
+                throw new NoSuchAlgorithmException(algo.name +
+                        " Algorithm not supported by this JVM");
+        }
+    }
+    /**
+     * (Re)Initialize the digest
+     * @param algo
+     * @throws NoSuchAlgorithmException
+     */
+    public void initialize(DigestAlgo algo) throws NoSuchAlgorithmException {
+        this.algo = algo;
+        initialize();
+    }
+    
+    /**
+     * Update the digest with new bytes
+     * @param bytes
+     * @param offset
+     * @param length
+     */
+    public void Update(byte [] bytes, int offset, int length) {
+        if (md5 != null) {
+            md5.Update(bytes, offset, length);
+            return;
+        }
+        switch (algo) {
+            case ADLER32:
+            case CRC32:
+                checksum.update(bytes, offset, length);
+                return;
+            case MD5:
+            case MD2:
+            case SHA1:
+            case SHA256:
+            case SHA384:
+            case SHA512:
+                digest.update(bytes, offset, length);
+                return;
+        }
+    }
+    /**
+     * 
+     * @return the digest in array of bytes
+     */
+    public byte[] Final() {
+        if (md5 != null) {
+            return md5.Final();
+        }
+        switch (algo) {
+            case ADLER32:
+            case CRC32:
+                return Long.toOctalString(checksum.getValue()).getBytes();
+            case MD5:
+            case MD2:
+            case SHA1:
+            case SHA256:
+            case SHA384:
+            case SHA512:
+                return digest.digest();
+        }
+        return null;
+    }
     /**
      * Initialize the MD5 support
      * @param mustUseFastMd5 True will use FastMD5 support, False will use JVM native MD5
