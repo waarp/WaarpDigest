@@ -460,8 +460,7 @@ public class FilesystemBasedDigest {
     }
     /**
      * Get the Digest for the file using the specified algorithm using access through NIO or not 
-     * @param f
-     * @param nio
+     * @param stream
      * @param algo
      * @return the digest
      * @throws IOException
