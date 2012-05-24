@@ -405,7 +405,7 @@ public class MD5 {
         finals = null;
         int newlength = length;
         /* Length can be told to be shorter, but not inter */
-        if (newlength - offset > buffer.length) {
+        if (newlength + offset > buffer.length) {
             newlength = buffer.length - offset;
         }
 
@@ -588,11 +588,26 @@ public class MD5 {
      *
      * @param buffer
      *            ChannelBuffer to use for updating the hash
+     *            and this buffer will not be changed
      */
     public void Update(ChannelBuffer buffer) {
-        byte[] bytes = new byte[buffer.readableBytes()];
-        buffer.getBytes(buffer.readerIndex(), bytes);
-        Update(state, bytes, 0, bytes.length);
+        byte[] bytes;
+        int start = 0;
+        int len = buffer.readableBytes();
+        if (buffer.hasArray()) {
+            start = buffer.arrayOffset();
+            bytes = buffer.array();
+            if (bytes.length > start+len) {
+                byte[] temp = new byte[len];
+                System.arraycopy(bytes, start, temp, 0, len);
+                start = 0;
+                bytes = temp;
+            }
+        } else {
+            bytes = new byte[len];
+            buffer.getBytes(start, bytes);
+        }
+        Update(state, bytes, start, len);
     }
 
     private byte[] Encode(int input[], int len) {
@@ -1056,40 +1071,6 @@ public class MD5 {
             throw e;
         }
     }
-
-    /**
-     * Calculates and returns the hash of the contents of the given file using
-     * Cipher file access.
-     *
-     * @param c
-     *            as the CipherInputStream
-     * @return the hash from the CipherInputStream
-     * @throws IOException
-     **/
-    /*
-    public static byte[] getHashCipher(CipherInputStream c) throws IOException {
-        if (c == null) {
-            throw new FileNotFoundException();
-        }
-        try {
-            int buf_size = 65536;
-            byte[] buf = new byte[buf_size];
-            int read = 0;
-            MD5 md5 = new MD5();
-            read = c.read(buf);
-            while (read > 0) {
-                md5.Update(md5.state, buf, 0, read);
-                read = c.read(buf);
-            }
-            buf = null;
-            buf = md5.Final();
-            md5 = null;
-            return buf;
-        } catch (IOException e) {
-            throw e;
-        }
-    }
-    */
     
     /**
      * Test if both hashes are equal
@@ -1103,28 +1084,6 @@ public class MD5 {
      **/
     public static boolean hashesEqual(byte[] hash1, byte[] hash2) {
         return Arrays.equals(hash1, hash2);
-        /*if (hash1 == null) {
-            return hash2 == null;
-        }
-        if (hash2 == null) {
-            return false;
-        }
-        int targ = 16;
-        if (hash1.length < 16) {
-            if (hash2.length != hash1.length) {
-                return false;
-            }
-            targ = hash1.length;
-        } else if (hash2.length < 16) {
-            return false;
-        }
-        
-        for (int i = 0; i < targ; i ++) {
-            if (hash1[i] != hash2[i]) {
-                return false;
-            }
-        }
-        return true;*/
     }
 
     private static byte[] salt = {'G','o','l','d','e','n','G','a','t','e'};

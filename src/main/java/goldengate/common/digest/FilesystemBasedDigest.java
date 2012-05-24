@@ -492,7 +492,7 @@ public class FilesystemBasedDigest {
     /**
      * Get hash with given {@link ChannelBuffer} (from Netty)
      * 
-     * @param buffer
+     * @param buffer this buffer will not be changed
      * @param algo
      * @return the hash
      * @throws IOException 
@@ -500,6 +500,21 @@ public class FilesystemBasedDigest {
     public static byte[] getHash(ChannelBuffer buffer, DigestAlgo algo) throws IOException {
         Checksum checksum = null;
         byte[] bytes = null;
+        int start = 0;
+        int length = buffer.readableBytes();
+        if (buffer.hasArray()) {
+            start = buffer.arrayOffset();
+            bytes = buffer.array();
+            if (bytes.length > start+length) {
+                byte[] temp = new byte[length];
+                System.arraycopy(bytes, start, temp, 0, length);
+                start = 0;
+                bytes = temp;
+            }
+        } else {
+            bytes = new byte[length];
+            buffer.getBytes(buffer.readerIndex(), bytes);
+        }
         switch (algo) {
             case ADLER32:
                 checksum = new Adler32();
@@ -507,9 +522,7 @@ public class FilesystemBasedDigest {
                 if (checksum == null) { // not ADLER32
                     checksum = new CRC32();
                 }
-                bytes = new byte[buffer.readableBytes()];
-                buffer.getBytes(buffer.readerIndex(), bytes);
-                checksum.update(bytes, 0, bytes.length);
+                checksum.update(bytes, start, length);
                 bytes = null;
                 bytes = Long.toOctalString(checksum.getValue()).getBytes();
                 checksum = null;
@@ -517,7 +530,7 @@ public class FilesystemBasedDigest {
             case MD5:
                 if (useFastMd5) {
                     MD5 md5 = new MD5();
-                    md5.Update(buffer);
+                    md5.Update(bytes, start, length);
                     bytes = md5.Final();
                     md5 = null;
                     return bytes;
@@ -528,8 +541,6 @@ public class FilesystemBasedDigest {
             case SHA384:
             case SHA512:
                 String algoname = algo.name;
-                bytes = new byte[buffer.readableBytes()];
-                buffer.getBytes(buffer.readerIndex(), bytes);
                 MessageDigest digest = null;
                 try {
                     digest = MessageDigest.getInstance(algoname);
@@ -537,7 +548,7 @@ public class FilesystemBasedDigest {
                     throw new IOException(algoname +
                             " Algorithm not supported by this JVM", e);
                 }
-                digest.update(bytes, 0, bytes.length);
+                digest.update(bytes, start, length);
                 bytes = digest.digest();
                 digest = null;
                 return bytes;
@@ -550,7 +561,8 @@ public class FilesystemBasedDigest {
      * Get hash with given {@link ChannelBuffer} (from Netty)
      *
      * @param buffer
-     *            ChannelBuffer to use to get the hash
+     *            ChannelBuffer to use to get the hash and 
+     *            this buffer will not be changed
      * @return the hash
      */
     public static byte[] getHashMd5(ChannelBuffer buffer) {
