@@ -10,7 +10,7 @@
   <parent>
     <groupId>GoldenGate</groupId>
     <artifactId>persistence-deps</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
   </parent>
   <scm>
   	<connection>scm:svn:http://goldengate.svn.sourceforge.net/svnroot/goldengate/GoldenGateDigest/trunk</connection>
@@ -41,12 +41,6 @@
       <groupId>io.netty</groupId>
       <artifactId>netty</artifactId>
       <version>3.5.0.Beta1</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>GoldenGate</groupId>
-  		<artifactId>persistence-deps</artifactId>
-  		<version>1.0</version>
-  		<type>pom</type>
   	</dependency>
   </dependencies>
   <properties>
