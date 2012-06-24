@@ -1,8 +1,7 @@
-Waarp Central
+Waarp Digest
 =============
 
-You will find in this web site some information on this Open Source project named Waarp,
-fully in Java.
+You will find in this web site the sub project Waarp Digest.
 
 The global license is GPL V3.
 
