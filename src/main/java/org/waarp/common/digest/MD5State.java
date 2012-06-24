@@ -19,7 +19,7 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package goldengate.common.digest;
+package org.waarp.common.digest;
 
 /**
  * Fast implementation of RSA's MD5 hash generator in Java JDK Beta-2 or higher<br>

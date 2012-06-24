@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <document>
 	<properties>
-		<title>GoldenGate Digest</title>
-		<author email="fredbregier@free.fr">Frederic Bregier</author>
+		<title>Waarp Digest</title>
+		<author email="fredbregier at free.fr">Frederic Bregier</author>
 	</properties>
 	<body>
-		<release version="1.0.5" date="2012-03-12" description="Add functionalities">
+		<release version="1.1.0" date="2012-07-01" description="First Waarp Release">
+			<action dev="Frederic Bregier" type="fix">Fix hierarchy</action>
+			<action dev="Frederic Bregier" type="fix">Removal of C code</action>
+		</release>
+		<release version="1.0.6" date="2012-06-30" description="Fix release">
 			<action dev="Frederic Bregier" type="fix">Add some methods on InputStream</action>
+		</release>
+		<release version="1.0.5" date="2012-03-12" description="Add functionalities">
 			<action dev="Frederic Bregier" type="fix">Add FileystemBasedDigest Object to allow manual digest feeding</action>
 		</release>
 		<release version="1.0.4" date="2012-02-12" description="Add functionalities">

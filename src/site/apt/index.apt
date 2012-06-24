@@ -1,11 +1,11 @@
-GoldenGate Digest
+Waarp Digest
 
-  The GoldenGate Digest project contains several classes that are common with different
-  sub projects of GoldenGate (FTP, OpenR66, ...). These classes are for Digest implementation.
+  The Waarp Digest project contains several classes that are common with different
+  sub projects of Waarp (FTP, R66, ...). These classes are for Digest implementation.
 
 Dependency
 
-  This project has Netty framework (NIO great framework support at {{http://www.jboss.org/netty}}
+  This project has Netty framework (NIO great framework support at {{http://netty.io}}
   as dependency. It is tend to be really efficient, both in term of memory, threads and network
   bandwidth..
   It contains a re implementation of the FastMD5 library from Santeri Paavolainen and Timothy W Macinta.
@@ -14,7 +14,7 @@ Specificities
 
   These classes are for Digest implementation.
 
-[images/goldengatesmall.jpg] GoldenGate Main Project Logo
+[images/waarp.jpg] Waarp Main Project Logo
 
-  See global GoldenGate project at {{http://openr66.free.fr/}}and particular GoldenGate Digest page at
-  {{http://openr66.free.fr/GoldenGateDigest.html}}
+  See global Waarp project at {{http://waarp.github.com/Waarp/}}and particular Waarp Digest page at
+  {{http://waarp.github.com/WaarpDigest/}}

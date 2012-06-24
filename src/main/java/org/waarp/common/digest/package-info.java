@@ -25,4 +25,4 @@
  * 
  * @apiviz.landmark
  */
-package goldengate.common.digest;
+package org.waarp.common.digest;
