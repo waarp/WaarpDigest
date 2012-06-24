@@ -347,7 +347,8 @@ public class FilesystemBasedDigest {
      * @return the digest
      * @throws IOException
      */
-    public static byte[] getHash(File f, boolean nio, DigestAlgo algo) throws IOException {
+    @SuppressWarnings("resource")
+	public static byte[] getHash(File f, boolean nio, DigestAlgo algo) throws IOException {
         if (!f.exists()) {
             throw new FileNotFoundException(f.toString());
         }

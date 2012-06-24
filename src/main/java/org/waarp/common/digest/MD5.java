@@ -697,7 +697,9 @@ public class MD5 {
                 buf_size = 65536;
             }
             byte[] buf = new byte[(int) buf_size];
-            FileInputStream in = new FileInputStream(f);
+            
+			@SuppressWarnings("resource")
+			FileInputStream in = new FileInputStream(f);
             close_me = in;
             FileChannel fileChannel = in.getChannel();
             ByteBuffer bb = ByteBuffer.wrap(buf);
