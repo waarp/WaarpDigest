@@ -1,6 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>Waarp</groupId>
   <artifactId>WaarpDigest</artifactId>
   <name>Waarp Digest</name>
   <version>1.1.0</version>
@@ -8,13 +7,17 @@
   <url>http://waarp.github.com/WaarpDigest</url>
   <inceptionYear>2009</inceptionYear>
   <parent>
-    <groupId>GoldenGate</groupId>
+    <groupId>Waarp</groupId>
     <artifactId>persistence-deps</artifactId>
     <version>1.1</version>
   </parent>
+  <issueManagement>
+	<system>GitHub Issues</system>
+  	<url>https://github.com/waarp/WaarpDigest/issues</url>
+  </issueManagement>
   <scm>
-  	<connection>scm:git:https://github.com/waarp/WaarpDigest</connection>
-  	<developerConnection>scm:git:https://github.com/waarp/WaarpDigest</developerConnection>
+  	<connection>scm:git:git://github.com/waarp/WaarpDigest.git</connection>
+  	<developerConnection>scm:git:git@github.com:waarp/WaarpDigest.git</developerConnection>
   	<url>https://github.com/waarp/WaarpDigest</url>
   </scm>
   <licenses>
