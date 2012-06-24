@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd version="4.3" timestamp="2012-06-24T14:26:10.515">
+<file name="J:\T&#xe9;l&#xe9;chargement\Git\fredericBregier\WaarpDigest\src\main\java\goldengate\common\digest\FilesystemBasedDigest.java">
+<violation beginline="70" endline="70" begincolumn="9" endcolumn="24" rule="ConstructorCallsOverridableMethod" ruleset="Design Rules" package="goldengate.common.digest" class="FilesystemBasedDigest" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#ConstructorCallsOverridableMethod" priority="1">
+Overridable method 'initialize' called during object construction
+</violation>
+<violation beginline="81" endline="105" begincolumn="9" endcolumn="9" rule="MissingBreakInSwitch" ruleset="Design Rules" package="goldengate.common.digest" class="FilesystemBasedDigest" method="initialize" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#MissingBreakInSwitch" priority="3">
+A switch statement does not contain a break
+</violation>
+<violation beginline="128" endline="141" begincolumn="9" endcolumn="9" rule="MissingBreakInSwitch" ruleset="Design Rules" package="goldengate.common.digest" class="FilesystemBasedDigest" method="Update" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#MissingBreakInSwitch" priority="3">
+A switch statement does not contain a break
+</violation>
+<violation beginline="128" endline="141" begincolumn="9" endcolumn="9" rule="SwitchStmtsShouldHaveDefault" ruleset="Design Rules" package="goldengate.common.digest" class="FilesystemBasedDigest" method="Update" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#SwitchStmtsShouldHaveDefault" priority="3">
+Switch statements should have a default label
+</violation>
+<violation beginline="147" endline="164" begincolumn="12" endcolumn="5" rule="ReturnEmptyArrayRatherThanNull" ruleset="Design Rules" package="goldengate.common.digest" class="FilesystemBasedDigest" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#ReturnEmptyArrayRatherThanNull" priority="1">
+Return an empty array rather than null.
+</violation>
+<violation beginline="151" endline="162" begincolumn="9" endcolumn="9" rule="MissingBreakInSwitch" ruleset="Design Rules" package="goldengate.common.digest" class="FilesystemBasedDigest" method="Final" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#MissingBreakInSwitch" priority="3">
+A switch statement does not contain a break
+</violation>
+<violation beginline="151" endline="162" begincolumn="9" endcolumn="9" rule="SwitchStmtsShouldHaveDefault" ruleset="Design Rules" package="goldengate.common.digest" class="FilesystemBasedDigest" method="Final" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#SwitchStmtsShouldHaveDefault" priority="3">
+Switch statements should have a default label
+</violation>
+<violation beginline="313" endline="313" begincolumn="80" endcolumn="82" rule="AvoidReassigningParameters" ruleset="Design Rules" package="goldengate.common.digest" class="FilesystemBasedDigest" method="getHashNoNio" variable="buf" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AvoidReassigningParameters" priority="2">
+Avoid reassigning parameters such as 'buf'
+</violation>
+<violation beginline="313" endline="313" begincolumn="80" endcolumn="82" rule="AvoidReassigningParameters" ruleset="Design Rules" package="goldengate.common.digest" class="FilesystemBasedDigest" method="getHashNoNio" variable="buf" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AvoidReassigningParameters" priority="2">
+Avoid reassigning parameters such as 'buf'
+</violation>
+<violation beginline="313" endline="313" begincolumn="80" endcolumn="82" rule="AvoidReassigningParameters" ruleset="Design Rules" package="goldengate.common.digest" class="FilesystemBasedDigest" method="getHashNoNio" variable="buf" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AvoidReassigningParameters" priority="2">
+Avoid reassigning parameters such as 'buf'
+</violation>
+<violation beginline="313" endline="313" begincolumn="80" endcolumn="82" rule="AvoidReassigningParameters" ruleset="Design Rules" package="goldengate.common.digest" class="FilesystemBasedDigest" method="getHashNoNio" variable="buf" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AvoidReassigningParameters" priority="2">
+Avoid reassigning parameters such as 'buf'
+</violation>
+<violation beginline="455" endline="456" begincolumn="19" endcolumn="17" rule="EmptyCatchBlock" ruleset="Basic Rules" package="goldengate.common.digest" class="FilesystemBasedDigest" method="getHash" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="485" endline="486" begincolumn="19" endcolumn="17" rule="EmptyCatchBlock" ruleset="Basic Rules" package="goldengate.common.digest" class="FilesystemBasedDigest" method="getHash" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="518" endline="558" begincolumn="9" endcolumn="9" rule="MissingBreakInSwitch" ruleset="Design Rules" package="goldengate.common.digest" class="FilesystemBasedDigest" method="getHash" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#MissingBreakInSwitch" priority="3">
+A switch statement does not contain a break
+</violation>
+</file>
+<file name="J:\T&#xe9;l&#xe9;chargement\Git\fredericBregier\WaarpDigest\src\main\java\goldengate\common\digest\MD5.java">
+<violation beginline="156" endline="159" begincolumn="25" endcolumn="5" rule="AvoidSynchronizedAtMethodLevel" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AvoidSynchronizedAtMethodLevel" priority="3">
+Use block level rather than method level synchronization
+</violation>
+<violation beginline="168" endline="168" begincolumn="9" endcolumn="14" rule="ConstructorCallsOverridableMethod" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#ConstructorCallsOverridableMethod" priority="1">
+Overridable method 'Init' called during object construction
+</violation>
+<violation beginline="180" endline="180" begincolumn="9" endcolumn="29" rule="ConstructorCallsOverridableMethod" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#ConstructorCallsOverridableMethod" priority="1">
+Overridable method 'Update' called during object construction
+</violation>
+<violation beginline="180" endline="180" begincolumn="9" endcolumn="29" rule="ConstructorCallsOverridableMethod" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#ConstructorCallsOverridableMethod" priority="1">
+Overridable method 'Update' called during object construction
+</violation>
+<violation beginline="180" endline="180" begincolumn="9" endcolumn="29" rule="ConstructorCallsOverridableMethod" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#ConstructorCallsOverridableMethod" priority="1">
+Overridable method 'Update' called during object construction
+</violation>
+<violation beginline="180" endline="180" begincolumn="9" endcolumn="29" rule="ConstructorCallsOverridableMethod" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#ConstructorCallsOverridableMethod" priority="1">
+Overridable method 'Update' called during object construction
+</violation>
+<violation beginline="180" endline="180" begincolumn="9" endcolumn="29" rule="ConstructorCallsOverridableMethod" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#ConstructorCallsOverridableMethod" priority="1">
+Overridable method 'Update' called during object construction
+</violation>
+<violation beginline="636" endline="659" begincolumn="25" endcolumn="5" rule="AvoidSynchronizedAtMethodLevel" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AvoidSynchronizedAtMethodLevel" priority="3">
+Use block level rather than method level synchronization
+</violation>
+<violation beginline="726" endline="733" begincolumn="38" endcolumn="5" rule="AvoidSynchronizedAtMethodLevel" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AvoidSynchronizedAtMethodLevel" priority="3">
+Use block level rather than method level synchronization
+</violation>
+<violation beginline="741" endline="745" begincolumn="38" endcolumn="5" rule="AvoidSynchronizedAtMethodLevel" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AvoidSynchronizedAtMethodLevel" priority="3">
+Use block level rather than method level synchronization
+</violation>
+<violation beginline="752" endline="760" begincolumn="39" endcolumn="5" rule="AvoidSynchronizedAtMethodLevel" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AvoidSynchronizedAtMethodLevel" priority="3">
+Use block level rather than method level synchronization
+</violation>
+<violation beginline="767" endline="942" begincolumn="39" endcolumn="5" rule="AvoidSynchronizedAtMethodLevel" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AvoidSynchronizedAtMethodLevel" priority="3">
+Use block level rather than method level synchronization
+</violation>
+<violation beginline="775" endline="775" begincolumn="54" endcolumn="69" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="808" endline="808" begincolumn="23" endcolumn="43" rule="UseLocaleWithCaseConversions" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#UseLocaleWithCaseConversions" priority="3">
+When doing a String.toLowerCase()/toUpperCase() call, use a Locale
+</violation>
+<violation beginline="809" endline="809" begincolumn="23" endcolumn="43" rule="UseLocaleWithCaseConversions" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#UseLocaleWithCaseConversions" priority="3">
+When doing a String.toLowerCase()/toUpperCase() call, use a Locale
+</violation>
+<violation beginline="817" endline="817" begincolumn="17" endcolumn="39" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="818" endline="818" begincolumn="22" endcolumn="42" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="818" endline="818" begincolumn="47" endcolumn="68" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="819" endline="819" begincolumn="29" endcolumn="50" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="819" endline="819" begincolumn="55" endcolumn="76" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="819" endline="820" begincolumn="81" endcolumn="43" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="828" endline="828" begincolumn="22" endcolumn="44" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="829" endline="829" begincolumn="22" endcolumn="44" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="835" endline="835" begincolumn="22" endcolumn="42" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="835" endline="835" begincolumn="47" endcolumn="68" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="836" endline="836" begincolumn="29" endcolumn="50" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="836" endline="836" begincolumn="55" endcolumn="76" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="836" endline="837" begincolumn="81" endcolumn="43" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="846" endline="846" begincolumn="22" endcolumn="44" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="852" endline="852" begincolumn="58" endcolumn="78" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="864" endline="864" begincolumn="23" endcolumn="43" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="865" endline="865" begincolumn="23" endcolumn="44" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="866" endline="866" begincolumn="23" endcolumn="44" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="867" endline="867" begincolumn="23" endcolumn="44" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="868" endline="868" begincolumn="23" endcolumn="44" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="876" endline="876" begincolumn="22" endcolumn="45" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="883" endline="883" begincolumn="22" endcolumn="46" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="884" endline="884" begincolumn="18" endcolumn="38" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="885" endline="885" begincolumn="18" endcolumn="39" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="886" endline="886" begincolumn="18" endcolumn="39" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="887" endline="887" begincolumn="18" endcolumn="39" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="888" endline="888" begincolumn="18" endcolumn="39" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="895" endline="895" begincolumn="22" endcolumn="46" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="896" endline="896" begincolumn="22" endcolumn="44" rule="PositionLiteralsFirstInComparisons" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="_loadNativeLibrary" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" priority="3">
+Position literals first in String comparisons
+</violation>
+<violation beginline="980" endline="981" begincolumn="19" endcolumn="17" rule="EmptyCatchBlock" ruleset="Basic Rules" package="goldengate.common.digest" class="MD5" method="getHash" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="1035" endline="1036" begincolumn="19" endcolumn="17" rule="EmptyCatchBlock" ruleset="Basic Rules" package="goldengate.common.digest" class="MD5" method="getHashNio" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="1068" endline="1069" begincolumn="19" endcolumn="17" rule="EmptyCatchBlock" ruleset="Basic Rules" package="goldengate.common.digest" class="MD5" method="getHash" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="1151" endline="1156" begincolumn="13" endcolumn="13" rule="ConfusingTernary" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="main" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#ConfusingTernary" priority="3">
+Avoid if (x != y) ..; else ..;
+</violation>
+<violation beginline="1168" endline="1173" begincolumn="13" endcolumn="13" rule="ConfusingTernary" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="main" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#ConfusingTernary" priority="3">
+Avoid if (x != y) ..; else ..;
+</violation>
+<violation beginline="1185" endline="1197" begincolumn="9" endcolumn="9" rule="ConfusingTernary" ruleset="Design Rules" package="goldengate.common.digest" class="MD5" method="main" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#ConfusingTernary" priority="3">
+Avoid if (x != y) ..; else ..;
+</violation>
+</file>
+</pmd>
