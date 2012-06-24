@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pmd version="4.3" timestamp="2012-06-24T16:07:53.865">
+<pmd version="4.3" timestamp="2012-06-24T19:33:25.296">
 <file name="J:\T&#xe9;l&#xe9;chargement\Git\fredericBregier\WaarpDigest\src\main\java\org\waarp\common\digest\FilesystemBasedDigest.java">
 <violation beginline="70" endline="70" begincolumn="9" endcolumn="24" rule="ConstructorCallsOverridableMethod" ruleset="Design Rules" package="org.waarp.common.digest" class="FilesystemBasedDigest" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#ConstructorCallsOverridableMethod" priority="1">
 Overridable method 'initialize' called during object construction
