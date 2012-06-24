@@ -12,7 +12,7 @@
     <version>1.1</version>
   </parent>
   <issueManagement>
-	<system>GitHub Issues</system>
+	<system>GitHub</system>
   	<url>https://github.com/waarp/WaarpDigest/issues</url>
   </issueManagement>
   <scm>
