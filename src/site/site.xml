@@ -15,10 +15,6 @@
     <links>
     	<item name="Waarp" href="http://www.waarp.it/"/>
     </links>
-  	<menu name="Waarp Digest">
-  		<item name="Overview of Waarp Digest" href="index.html"/>
-  		<item name="Waarp Main Project" href="http://waarp.github.com/Waarp"/>
-  	</menu>
     <menu ref="reports"/>
   </body>
 </project>
