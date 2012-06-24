@@ -19,7 +19,7 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package goldengate.common.digest;
+package org.waarp.common.digest;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -77,46 +77,8 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * This Java class has been derived from the RSA Data Security, Inc. MD5
  * Message-Digest Algorithm and its reference implementation.
  * <p>
- * This class will attempt to use a native method to quickly compute checksums
- * when the appropriate native library is available. On Linux, this library
- * should be named "MD5.so" and on Windows it should be named "MD5.dll". The
- * code will attempt to locate the library in the following locations in the
- * order given:
- *
- * <ol>
- * <li>The path specified by the system property
- * "com.twmacinta.util.MD5.NATIVE_LIB_FILE" (be sure to include "MD5.so" or
- * "MD5.dll" as appropriate at the end of the path).
- * <li>A platform specific directory beneath the "lib/arch/" directory. On Linux
- * for x86, this is "lib/arch/linux_x86/". On Windows for x86, this is
- * "lib/arch/win32_x86/".
- * <li>Within the "lib/" directory.
- * <li>Within the current directory.
- * </ol>
- *
- * <p>
- * If the library is not found, the code will fall back to the default (slower)
- * Java code.
- * <p>
- * As a side effect of having the code search for the native library,
- * SecurityExceptions might be thrown on JVMs that have a restrictive
- * SecurityManager. The initialization code attempts to silently discard these
- * exceptions and continue, but many SecurityManagers will attempt to notify the
- * user directly of all SecurityExceptions thrown. Consequently, the code has
- * provisions for skipping the search for the native library. Any of these
- * provisions may be used to skip the search as long as they are performed
- * <i>before</i> the first instance of a com.twmacinta.util.MD5 object is
- * constructed (note that the convenience stream objects will implicitly create
- * an MD5 object).
- * <p>
- * The first option is to set the system property
- * "com.twmacinta.util.MD5.NO_NATIVE_LIB" to "true" or "1". Unfortunately,
- * SecurityManagers may also choose to disallow system property setting, so this
- * won't be of use in all cases.
- * <p>
- * The second option is to call com.twmacinta.util.MD5.initNativeLibrary(true)
- * before any MD5 objects are constructed.
- *
+ * This class will not use the native C version.
+ * 
  * @author Santeri Paavolainen <sjpaavol@cc.helsinki.fi>
  * @author Timothy W Macinta (twm@alum.mit.edu) (optimizations and bug fixes)
  * @author Frederic Bregier Bregier (add NIO support and dynamic library path
@@ -143,12 +105,6 @@ public class MD5 {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-    private static boolean native_lib_loaded = false;
-
-    private static boolean native_lib_init_pending = true;
-
-    private static String native_lib_path = "D:/somewhere/goldengate/lib/arch/win32_x86/MD5.dll";
-
     /**
      * Initialize MD5 internal state (object can be reused just by calling
      * Init() after every Final()
@@ -162,9 +118,6 @@ public class MD5 {
      * Class constructor
      */
     public MD5() {
-        if (native_lib_init_pending) {
-            _initNativeLibrary();
-        }
         Init();
     }
 
@@ -222,9 +175,6 @@ public class MD5 {
         out[15] = buffer[shift + 60] & 0xff | (buffer[shift + 61] & 0xff) << 8 |
                 (buffer[shift + 62] & 0xff) << 16 | buffer[shift + 63] << 24;
     }
-
-    private native void TransformJni(int[] stat, byte buffer[], int shift,
-            int length);
 
     private void Transform(MD5State stat, byte buffer[], int shift,
             int[] decode_buf) {
@@ -417,56 +367,20 @@ public class MD5 {
         partlen = 64 - index;
 
         if (newlength >= partlen) {
-            if (native_lib_loaded) {
+			// update state (using only Java) to reflect input
 
-                // update state (using native method) to reflect input
-
-                if (partlen == 64) {
-                    partlen = 0;
-                } else {
-                    for (i = 0; i < partlen; i ++) {
-                        stat.buffer[i + index] = buffer[i + offset];
-                    }
-                    TransformJni(stat.state, stat.buffer, 0, 64);
-                }
-                i = partlen + ((newlength - partlen) / 64) * 64;
-                
-                // break into chunks to guard against stack overflow in JNI
-                
-                int transformLength = newlength - partlen;
-                int transformOffset = partlen + offset;
-                final int MAX_LENGTH = 65536; // prevent stack overflow in JNI
-                while (true) {
-                    if (transformLength > MAX_LENGTH) {
-                        TransformJni(stat.state, buffer, transformOffset, MAX_LENGTH);
-                        transformLength -= MAX_LENGTH;
-                        transformOffset += MAX_LENGTH;
-                    } else {
-                        TransformJni(stat.state, buffer, transformOffset, transformLength);
-                        break;
-                    }
-                }
-                //Was
-                /*TransformJni(stat.state, buffer, partlen + offset, newlength -
-                        partlen);
-                i = partlen + (newlength - partlen) / 64 * 64;*/
-            } else {
-
-                // update state (using only Java) to reflect input
-
-                int[] decode_buf = new int[16];
-                if (partlen == 64) {
-                    partlen = 0;
-                } else {
-                    for (i = 0; i < partlen; i ++) {
-                        stat.buffer[i + index] = buffer[i + offset];
-                    }
-                    Transform(stat, stat.buffer, 0, decode_buf);
-                }
-                for (i = partlen; i + 63 < newlength; i += 64) {
-                    Transform(stat, buffer, i + offset, decode_buf);
-                }
-            }
+			int[] decode_buf = new int[16];
+			if (partlen == 64) {
+				partlen = 0;
+			} else {
+				for (i = 0; i < partlen; i++) {
+					stat.buffer[i + index] = buffer[i + offset];
+				}
+				Transform(stat, stat.buffer, 0, decode_buf);
+			}
+			for (i = partlen; i + 63 < newlength; i += 64) {
+				Transform(stat, buffer, i + offset, decode_buf);
+			}
             index = 0;
         } else {
             i = 0;
@@ -718,230 +632,6 @@ public class MD5 {
     }
 
     /**
-     * Disable lib loading (True) or enable it (false)
-     *
-     * @param disallow_lib_loading
-     * @return True if the native Library is loaded, else False
-     */
-    public static synchronized final boolean initNativeLibrary(
-            boolean disallow_lib_loading) {
-        if (disallow_lib_loading) {
-            native_lib_init_pending = false;
-            return false;
-        }
-        return _initNativeLibrary();
-    }
-
-    /**
-     * Initialize the Native Library from path
-     *
-     * @param libpath
-     * @return True if the native Library is loaded, else False
-     */
-    public static synchronized final boolean initNativeLibrary(String libpath) {
-        native_lib_path = libpath;
-        native_lib_init_pending = true;// reload!
-        return _initNativeLibrary();
-    }
-
-    /**
-     * Internal Function to initialize if needed the Native Library support
-     *
-     * @return True if the native Library is loaded, else False
-     */
-    private static synchronized final boolean _initNativeLibrary() {
-        if (!native_lib_init_pending) {
-            return native_lib_loaded;
-        }
-        native_lib_loaded = _loadNativeLibrary();
-        // System.out.println("MD5 Binary loaded:"+native_lib_loaded);
-        native_lib_init_pending = false;
-        return native_lib_loaded;
-    }
-
-    /**
-     * Try to load the Native Library
-     *
-     * @return True if the native Library is loaded, else False
-     */
-    private static synchronized final boolean _loadNativeLibrary() {
-        try {
-
-            // don't try to load if the right property is set
-            String prop = System
-                    .getProperty("com.twmacinta.util.MD5.NO_NATIVE_LIB");
-            if (prop != null) {
-                prop = prop.trim();
-                if (prop.equalsIgnoreCase("true") || prop.equals("1")) {
-                    return false;
-                }
-            }
-
-            // the library to load can be specified through native_lib_path
-            File fstring;
-            prop = native_lib_path;
-            if (prop != null) {
-                fstring = new File(prop);
-                if (fstring.canRead()) {
-                    System.load(fstring.getAbsolutePath());
-                    return true;
-                }
-            }
-            // the library to load can be specified as a property
-
-            File f;
-            prop = System.getProperty("com.twmacinta.util.MD5.NATIVE_LIB_FILE");
-            if (prop != null) {
-                f = new File(prop);
-                if (f.canRead()) {
-                    System.load(f.getAbsolutePath());
-                    return true;
-                }
-            }
-            // determine the operating system and architecture
-
-            String os_name = System.getProperty("os.name");
-            String os_arch = System.getProperty("os.arch");
-            if (os_name == null || os_arch == null) {
-                return false;
-            }
-            os_name = os_name.toLowerCase();
-            os_arch = os_arch.toLowerCase();
-            // define settings which are OS arch architecture independent
-
-            File arch_lib_path = null;
-            String arch_libfile_suffix = null;
-
-            // fill in settings for Linux on x86
-
-            if (os_name.equals("linux") &&
-                    (os_arch.equals("x86") || os_arch.equals("i386") ||
-                            os_arch.equals("i486") || os_arch.equals("i586") || os_arch
-                            .equals("i686"))) {
-                arch_lib_path = new File(new File(new File("lib"), "arch"),
-                        "linux_x86");
-                arch_libfile_suffix = ".so";
-            }
-            
-            // fill in settings for Linux on amd64
-            
-            else if (os_name.equals("linux") &&
-                     os_arch.equals("amd64")) {
-                arch_lib_path = new File(new File(new File("lib"), "arch"), "linux_amd64");
-                arch_libfile_suffix = ".so"; 
-                // fill in settings for Windows on x86
-
-            } else if (os_name.startsWith("windows ") &&
-                    (os_arch.equals("x86") || os_arch.equals("i386") ||
-                            os_arch.equals("i486") || os_arch.equals("i586") || os_arch
-                            .equals("i686"))) {
-                arch_lib_path = new File(new File(new File("lib"), "arch"),
-                        "win32_x86");
-                arch_libfile_suffix = ".dll";
-            }
-            
-            // fill in settings for Windows on amd64
-            
-            else if (os_name.startsWith("windows ") &&
-                     os_arch.equals("amd64")) {
-                arch_lib_path = new File(new File(new File("lib"), "arch"), "win_amd64");
-                arch_libfile_suffix = ".dll"; 
-            
-                // fill in settings Mac OS X on PPC
-
-            } else if (os_name.startsWith("mac os x") && os_arch.equals("ppc")) {
-                arch_lib_path = new File(new File(new File("lib"), "arch"),
-                        "darwin_ppc");
-                arch_libfile_suffix = ".jnilib";
-
-                // default to .so files with no architecture specific
-                // subdirectory
-            }
-            
-            // fill in settings for Mac OS X on x86
-            
-            else if (os_name.startsWith("mac os x") &&
-                     (os_arch.equals("x86") ||
-                      os_arch.equals("i386") ||
-                      os_arch.equals("i486") ||
-                      os_arch.equals("i586") ||
-                      os_arch.equals("i686"))) {
-                arch_lib_path = new File(new File(new File("lib"), "arch"), "darwin_x86");
-                arch_libfile_suffix = ".jnilib";
-            }
-            
-            // fill in settings for Mac OS X on x86_64
-            
-            else if (os_name.startsWith("mac os x") &&
-                     os_arch.equals("x86_64")) {
-                arch_lib_path = new File(new File(new File("lib"), "arch"), "darwin_x86_64");
-                arch_libfile_suffix = ".jnilib";
-            }
-            
-            // fill in settings for FreeBSD on x86
-            
-            else if (os_name.equals("freebsd") &&
-                (os_arch.equals("x86") ||
-                 os_arch.equals("i386") ||
-                 os_arch.equals("i486") ||
-                 os_arch.equals("i586") ||
-                 os_arch.equals("i686"))) {
-                arch_lib_path = new File(new File(new File("lib"), "arch"), "freebsd_x86");
-                arch_libfile_suffix = ".so"; 
-            }
-            
-            // fill in settings for FreeBSD on amd64
-            
-            else if (os_name.equals("freebsd") &&
-                     os_arch.equals("amd64")) {
-                arch_lib_path = new File(new File(new File("lib"), "arch"), "freebsd_amd64");
-                arch_libfile_suffix = ".so"; 
-            
-            } else {
-                arch_libfile_suffix = ".so";
-            }
-            // build the required filename
-
-            String fname = "MD5" + arch_libfile_suffix;
-
-            // try the architecture specific directory
-
-            if (arch_lib_path != null) {
-                f = new File(arch_lib_path, fname);
-                if (f.canRead()) {
-                    System.load(f.getAbsolutePath());
-                    return true;
-                }
-            }
-            // try the "lib" subdirectory
-
-            f = new File(new File("lib"), fname);
-            if (f.canRead()) {
-                System.load(f.getAbsolutePath());
-                return true;
-            }
-            // try the working directory
-
-            f = new File(fname);
-            if (f.canRead()) {
-                System.load(f.getAbsolutePath());
-                return true;
-            }
-
-            // discard SecurityExceptions
-
-        } catch (SecurityException e) {
-            System.err.println("Can't do native library: " + e.getMessage());
-        } catch (Exception e) {
-            System.err.println("Can't do native library: " + e.getMessage());
-        }
-
-        // unable to load
-
-        return false;
-    }
-
-    /**
      * Calculates and returns the hash of the contents of the given file.
      *
      * @param f
@@ -1007,7 +697,9 @@ public class MD5 {
                 buf_size = 65536;
             }
             byte[] buf = new byte[(int) buf_size];
-            FileInputStream in = new FileInputStream(f);
+            
+			@SuppressWarnings("resource")
+			FileInputStream in = new FileInputStream(f);
             close_me = in;
             FileChannel fileChannel = in.getChannel();
             ByteBuffer bb = ByteBuffer.wrap(buf);
@@ -1133,67 +825,5 @@ public class MD5 {
     public static final boolean equalPasswd(byte[] pwd, byte[] cryptPwd){
         byte [] bytes = passwdCrypt(pwd);
         return Arrays.equals(cryptPwd, bytes);
-    }
-    /**
-     * Test function
-     *
-     * @param argv
-     *            with 2 arguments as filename to hash and full path to the
-     *            Native Library
-     */
-    public static void main(String argv[]) {
-        long start = System.currentTimeMillis();
-        if (argv.length < 1) {
-            // Only passwdCrypt test
-            boolean nativeLib = false;
-            //nativeLib = initNativeLibrary("D:\\NEWJARS\\gglib\\win32\\MD5.dll");
-            nativeLib = initNativeLibrary(true);
-            if (!nativeLib) {
-                System.err.println("Native library cannot be load from " +
-                        "D:\\NEWJARS\\gglib\\win32\\MD5.dll");
-            } else {
-                System.out.println("Native library loaded from " + "D:\\NEWJARS\\gglib\\win32\\MD5.dll");
-            }
-            for (int i = 0; i < 1000000; i++) {
-                passwdCrypt("Ceci est mon password!");
-            }
-            System.err.println("Final passwd crypted in "+(System.currentTimeMillis() - start)+"ms is: "+passwdCrypt("Ceci est mon password!"));
-            System.err
-                    .println("Not enough argument: <full path to the filename to hash> [<full path to the native library>]");
-            return;
-        }
-        boolean nativeLib = false;
-        if (argv.length == 2) {
-            nativeLib = initNativeLibrary(argv[1]);
-            if (!nativeLib) {
-                System.err.println("Native library cannot be load from " +
-                        argv[1]);
-            } else {
-                System.out.println("Native library loaded from " + argv[1]);
-            }
-        }
-        File file = new File(argv[0]);
-        byte[] bmd5;
-        try {
-            // By recompiling using the first: NIO support, the second: standard
-            // support
-            bmd5 = getHashNio(file);
-            // bmd5 = getHash(file);
-        } catch (IOException e1) {
-            bmd5 = null;
-        }
-        if (bmd5 != null) {
-            if (nativeLib) {
-                System.out.println("FileInterface MD5 is " + asHex(bmd5) +
-                        " using Native Library in " +
-                        (System.currentTimeMillis() - start) + " ms");
-            } else {
-                System.out.println("FileInterface MD5 is " + asHex(bmd5) +
-                        " using Java version in " +
-                        (System.currentTimeMillis() - start) + " ms");
-            }
-        } else {
-            System.err.println("Cannot compute md5 for " + argv[1]);
-        }
     }
 }
