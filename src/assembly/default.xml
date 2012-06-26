@@ -21,7 +21,6 @@
         <include>**/src/**</include>
       </includes>
       <excludes>
-        <exclude>**/test/**</exclude>
         <exclude>**/target/**</exclude>
         <exclude>**/.*/**</exclude>
       </excludes>
