@@ -9,11 +9,13 @@
 			<action dev="Frederic Bregier" type="fix">Fix hierarchy</action>
 			<action dev="Frederic Bregier" type="fix">Removal of C code</action>
 		</release>
-		<release version="1.0.6" date="2012-06-30" description="Fix release">
-			<action dev="Frederic Bregier" type="fix">Add some methods on InputStream</action>
+		<release version="1.0.6" date="2012-06-25" description="Last GoldenGate release">
+			<action dev="Frederic Bregier" type="fix">Update to Netty 3.5.1</action>
+			<action dev="Frederic Bregier" type="fix">Add FileystemBasedDigest Object to allow manual digest feeding</action>
+			<action dev="Frederic Bregier" type="fix">Optimization on Digest of ChannelBuffer</action>
 		</release>
 		<release version="1.0.5" date="2012-03-12" description="Add functionalities">
-			<action dev="Frederic Bregier" type="fix">Add FileystemBasedDigest Object to allow manual digest feeding</action>
+			<action dev="Frederic Bregier" type="fix">Add some methods on InputStream</action>
 		</release>
 		<release version="1.0.4" date="2012-02-12" description="Add functionalities">
 			<action dev="Frederic Bregier" type="fix">Fix of DigestAlgo definitions</action>
