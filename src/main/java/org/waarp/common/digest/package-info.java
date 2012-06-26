@@ -2,10 +2,12 @@
  * Classes implementing digests support (MD2, MD5, SHA1, SHA-256/384/512, CRC32, ADLER32)<br><br>
  *
  *
- * MD5 can be implemented through Fast MD5 implementation, with or without C library support, 
+ * MD5 can be implemented through Fast MD5 implementation,  
  * but can be reverted to JVM native digest also.<br><br>
  * 
- * Recommendation for best performance would be to use C-library FastMD5 if possible for MD5, 
+ * Originally a C library support was optional but it is decided to stay full Java.
+ * 
+ * Recommendation for best performance would be to use FastMD5 if possible for MD5, 
  * but for portability to use native JVM digest implementations (so no FastMD5 at all). 
  * 
  * In order to let you make some choice, here is a short performance reports: (done using java -server option)
@@ -22,6 +24,8 @@
  * For information, sphlib (http://www.saphir2.com/sphlib/) were compared to native JVM implementation for all those digests, 
  * and it appears on small benchmarks (speed from sphlib) that native JVM implementation performs better
  * and that on MD5, FastMD5 performs better than sphlib but less than native JVM.
+ * 
+ * Therefore it is recommended to use native JVM MD5 support if possible.
  * 
  * @apiviz.landmark
  */

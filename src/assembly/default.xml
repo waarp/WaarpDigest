@@ -21,7 +21,6 @@
         <include>**/src/**</include>
       </includes>
       <excludes>
-        <exclude>**/test/**</exclude>
         <exclude>**/target/**</exclude>
         <exclude>**/.*/**</exclude>
       </excludes>
@@ -58,6 +57,9 @@
       <includes>
         <include>**/**</include>
       </includes>
+      <excludes>
+      	<exclude>**/test/**</exclude>
+      </excludes>
     </fileSet>
   </fileSets>
 </assembly>
