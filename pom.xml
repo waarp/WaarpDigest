@@ -169,7 +169,7 @@
 	          <windowtitle>${project.name} ${project.version} API Reference</windowtitle>
 	          <additionalparam>
 	            -link http://java.sun.com/javase/6/docs/api/
-	            -link http://jboss.org/file-access/default/members/netty/freezone/api/3.1/
+	            -link http://static.netty.io/3.5/api/
 
 				-group "Waarp Common Digest package" "org.waarp.common.digest*"
 
@@ -177,7 +177,7 @@
 	          </additionalparam>
 	          <encoding>UTF-8</encoding>
 	          <locale>en_US</locale>
-	          <excludePackageNames>${project.groupId}.example*:${project.groupId}.util.internal*</excludePackageNames>
+	          <excludePackageNames>${project.groupId}.test*:${project.groupId}.example*:${project.groupId}.util.internal*</excludePackageNames>
           </configuration>
           <reports>
            <report>aggregate</report>
