@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pmd-cpd>
 <duplication lines="19" tokens="130">
-<file line="591" path="J:\Téléchargement\Git\github\waarp-digest\WaarpDigest\src\main\java\org\waarp\common\digest\FilesystemBasedDigest.java"/>
-<file line="605" path="J:\Téléchargement\Git\github\waarp-digest\WaarpDigest\src\main\java\org\waarp\common\digest\MD5.java"/>
+<file line="591" path="J:\Git\github\waarp-digest\WaarpDigest\src\main\java\org\waarp\common\digest\FilesystemBasedDigest.java"/>
+<file line="605" path="J:\Git\github\waarp-digest\WaarpDigest\src\main\java\org\waarp\common\digest\MD5.java"/>
 <codefragment>
 <![CDATA[
         byte from[] = hex.getBytes();

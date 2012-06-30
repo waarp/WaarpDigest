@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pmd version="4.3" timestamp="2012-06-26T10:24:19.984">
-<file name="J:\T&#xe9;l&#xe9;chargement\Git\github\waarp-digest\WaarpDigest\src\main\java\org\waarp\common\digest\FilesystemBasedDigest.java">
+<pmd version="4.3" timestamp="2012-06-30T19:03:24.245">
+<file name="J:\Git\github\waarp-digest\WaarpDigest\src\main\java\org\waarp\common\digest\FilesystemBasedDigest.java">
 <violation beginline="70" endline="70" begincolumn="9" endcolumn="24" rule="ConstructorCallsOverridableMethod" ruleset="Design Rules" package="org.waarp.common.digest" class="FilesystemBasedDigest" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#ConstructorCallsOverridableMethod" priority="1">
 Overridable method 'initialize' called during object construction
 </violation>
@@ -44,7 +44,7 @@ Avoid empty catch blocks
 A switch statement does not contain a break
 </violation>
 </file>
-<file name="J:\T&#xe9;l&#xe9;chargement\Git\github\waarp-digest\WaarpDigest\src\main\java\org\waarp\common\digest\MD5.java">
+<file name="J:\Git\github\waarp-digest\WaarpDigest\src\main\java\org\waarp\common\digest\MD5.java">
 <violation beginline="112" endline="115" begincolumn="25" endcolumn="5" rule="AvoidSynchronizedAtMethodLevel" ruleset="Design Rules" package="org.waarp.common.digest" class="MD5" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AvoidSynchronizedAtMethodLevel" priority="3">
 Use block level rather than method level synchronization
 </violation>
