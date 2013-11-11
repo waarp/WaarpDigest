@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -443,13 +444,13 @@ public class MD5 {
 	 *            String to be update to hash (is used as s.getBytes())
 	 */
 	public void Update(String s) {
-		byte chars[] = s.getBytes();
+		byte chars[] = s.getBytes(FilesystemBasedDigest.UTF8);
 		Update(chars, chars.length);
 	}
 
 	/**
 	 * Update buffer with given string using the given encoding. If the given encoding is null, the
-	 * encoding "ISO8859_1" is used.
+	 * encoding "UTF8" is used.
 	 * 
 	 * @param s
 	 *            String to be update to hash (is used as s.getBytes(charset_name))
@@ -461,9 +462,9 @@ public class MD5 {
 	 */
 	public void Update(String s, String charset_name)
 			throws java.io.UnsupportedEncodingException {
-		String newcharset = charset_name;
-		if (newcharset == null) {
-			newcharset = "ISO8859_1";
+		Charset newcharset = FilesystemBasedDigest.UTF8;
+		if (charset_name != null) {
+			newcharset = Charset.forName(charset_name);
 		}
 		byte chars[] = s.getBytes(newcharset);
 		Update(chars, chars.length);
@@ -582,7 +583,7 @@ public class MD5 {
 	 * @return Array of bytes converted from hex-string
 	 */
 	public static final byte[] asByte(String buf) {
-		byte from[] = buf.getBytes();
+		byte from[] = buf.getBytes(FilesystemBasedDigest.UTF8);
 		byte hash[] = new byte[from.length / 2];
 		for (int i = 0, x = 0; i < hash.length; i++) {
 			byte code1 = from[x++];
@@ -766,7 +767,7 @@ public class MD5 {
 	 */
 	public static final String passwdCrypt(String pwd) {
 		MD5 md5 = new MD5();
-		byte[] bpwd = pwd.getBytes();
+		byte[] bpwd = pwd.getBytes(FilesystemBasedDigest.UTF8);
 		for (int i = 0; i < 16; i++) {
 			md5.Update(md5.state, bpwd, 0, bpwd.length);
 			md5.Update(md5.state, salt, 0, salt.length);

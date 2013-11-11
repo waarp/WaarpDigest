@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -59,6 +60,11 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * 
  */
 public class FilesystemBasedDigest {
+
+	/**
+	 * Format used for Files
+	 */
+	public static final Charset UTF8 = Charset.forName("UTF-8");
 
 	protected MD5 md5 = null;
 	protected Checksum checksum = null;
@@ -162,7 +168,7 @@ public class FilesystemBasedDigest {
 		switch (algo) {
 			case ADLER32:
 			case CRC32:
-				return Long.toOctalString(checksum.getValue()).getBytes();
+				return Long.toOctalString(checksum.getValue()).getBytes(UTF8);
 			case MD5:
 			case MD2:
 			case SHA1:
@@ -324,7 +330,7 @@ public class FilesystemBasedDigest {
 				}
 				in.close();
 				buf = null;
-				buf = Long.toOctalString(checksum.getValue()).getBytes();
+				buf = Long.toOctalString(checksum.getValue()).getBytes(UTF8);
 				checksum = null;
 				break;
 			case MD5:
@@ -408,7 +414,7 @@ public class FilesystemBasedDigest {
 						fileChannel.close();
 						fileChannel = null;
 						bb = null;
-						buf = Long.toOctalString(checksum.getValue()).getBytes();
+						buf = Long.toOctalString(checksum.getValue()).getBytes(UTF8);
 						checksum = null;
 						break;
 					case MD5:
@@ -527,7 +533,7 @@ public class FilesystemBasedDigest {
 				}
 				checksum.update(bytes, start, length);
 				bytes = null;
-				bytes = Long.toOctalString(checksum.getValue()).getBytes();
+				bytes = Long.toOctalString(checksum.getValue()).getBytes(UTF8);
 				checksum = null;
 				return bytes;
 			case MD5:
@@ -609,7 +615,7 @@ public class FilesystemBasedDigest {
 	 * @return the array of bytes representation of the hexadecimal String
 	 */
 	public static final byte[] getFromHex(String hex) {
-		byte from[] = hex.getBytes();
+		byte from[] = hex.getBytes(UTF8);
 		byte hash[] = new byte[from.length / 2];
 		for (int i = 0, x = 0; i < hash.length; i++) {
 			byte code1 = from[x++];
@@ -649,7 +655,7 @@ public class FilesystemBasedDigest {
 		} catch (NoSuchAlgorithmException e) {
 			return MD5.passwdCrypt(pwd);
 		}
-		byte[] bpwd = pwd.getBytes();
+		byte[] bpwd = pwd.getBytes(UTF8);
 		for (int i = 0; i < 16; i++) {
 			digest.update(bpwd, 0, bpwd.length);
 			digest.update(salt, 0, salt.length);
