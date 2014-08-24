@@ -32,7 +32,7 @@ import java.util.zip.Adler32;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
-import org.jboss.netty.buffer.ChannelBuffer;
+import io.netty.buffer.ByteBuf;
 
 /**
  * Class implementing digest like MD5, SHA1. MD5 is based on the Fast MD5 implementation, without C
@@ -498,7 +498,7 @@ public class FilesystemBasedDigest {
 	}
 
 	/**
-	 * Get hash with given {@link ChannelBuffer} (from Netty)
+	 * Get hash with given {@link ByteBuf} (from Netty)
 	 * 
 	 * @param buffer
 	 *            this buffer will not be changed
@@ -506,7 +506,7 @@ public class FilesystemBasedDigest {
 	 * @return the hash
 	 * @throws IOException
 	 */
-	public static byte[] getHash(ChannelBuffer buffer, DigestAlgo algo) throws IOException {
+	public static byte[] getHash(ByteBuf buffer, DigestAlgo algo) throws IOException {
 		Checksum checksum = null;
 		byte[] bytes = null;
 		int start = 0;
@@ -568,13 +568,13 @@ public class FilesystemBasedDigest {
 	}
 
 	/**
-	 * Get hash with given {@link ChannelBuffer} (from Netty)
+	 * Get hash with given {@link ByteBuf} (from Netty)
 	 * 
 	 * @param buffer
-	 *            ChannelBuffer to use to get the hash and this buffer will not be changed
+	 *            ByteBuf to use to get the hash and this buffer will not be changed
 	 * @return the hash
 	 */
-	public static byte[] getHashMd5(ChannelBuffer buffer) {
+	public static byte[] getHashMd5(ByteBuf buffer) {
 		try {
 			return getHash(buffer, DigestAlgo.MD5);
 		} catch (IOException e) {

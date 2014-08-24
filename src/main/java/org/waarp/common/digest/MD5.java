@@ -27,7 +27,7 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import org.jboss.netty.buffer.ChannelBuffer;
+import io.netty.buffer.ByteBuf;
 
 /**
  * Fast implementation of RSA's MD5 hash generator in Java JDK Beta-2 or higher.
@@ -482,12 +482,12 @@ public class MD5 {
 	}
 
 	/**
-	 * Updates hash with given {@link ChannelBuffer} (from Netty)
+	 * Updates hash with given {@link ByteBuf} (from Netty)
 	 * 
 	 * @param buffer
-	 *            ChannelBuffer to use for updating the hash and this buffer will not be changed
+	 *            ByteBuf to use for updating the hash and this buffer will not be changed
 	 */
-	public void Update(ChannelBuffer buffer) {
+	public void Update(ByteBuf buffer) {
 		byte[] bytes;
 		int start = 0;
 		int len = buffer.readableBytes();
