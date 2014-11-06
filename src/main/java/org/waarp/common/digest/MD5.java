@@ -494,12 +494,6 @@ public class MD5 {
 		if (buffer.hasArray()) {
 			start = buffer.arrayOffset();
 			bytes = buffer.array();
-			if (bytes.length > start + len) {
-				byte[] temp = new byte[len];
-				System.arraycopy(bytes, start, temp, 0, len);
-				start = 0;
-				bytes = temp;
-			}
 		} else {
 			bytes = new byte[len];
 			buffer.getBytes(start, bytes);

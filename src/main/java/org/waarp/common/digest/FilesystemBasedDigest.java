@@ -157,6 +157,30 @@ public class FilesystemBasedDigest {
 		}
 	}
 
+    private byte[] reusableBytes = null;
+
+	/**
+     * Update the digest with new buffer
+     * 
+     * @param buffer
+     */
+    public void Update(ChannelBuffer buffer) {
+        byte[] bytes = null;
+        int start = 0;
+        int length = buffer.readableBytes();
+        if (buffer.hasArray()) {
+            start = buffer.arrayOffset();
+            bytes = buffer.array();
+        } else {
+            if (reusableBytes == null || reusableBytes.length != length) {
+                reusableBytes = new byte[length];
+            }
+            bytes = reusableBytes;
+            buffer.getBytes(buffer.readerIndex(), bytes);
+        }
+        Update(bytes, start, length);
+    }
+
 	/**
 	 * 
 	 * @return the digest in array of bytes
@@ -514,12 +538,6 @@ public class FilesystemBasedDigest {
 		if (buffer.hasArray()) {
 			start = buffer.arrayOffset();
 			bytes = buffer.array();
-			if (bytes.length > start + length) {
-				byte[] temp = new byte[length];
-				System.arraycopy(bytes, start, temp, 0, length);
-				start = 0;
-				bytes = temp;
-			}
 		} else {
 			bytes = new byte[length];
 			buffer.getBytes(buffer.readerIndex(), bytes);
