@@ -12,11 +12,11 @@ import org.waarp.common.digest.FilesystemBasedDigest.DigestAlgo;
 
 public class FilesystemBasedDigestTest {
     private static final String TESTPHRASE = "This is a phrase to test";
-    private static final byte [] TESTPHRASEBYTES = TESTPHRASE.getBytes();
-    
+    private static final byte[] TESTPHRASEBYTES = TESTPHRASE.getBytes();
+
     @Test
     public void testGetHashByteBufDigestAlgo() {
-        
+
         try {
             for (int j = 0; j < 2; j++) {
                 for (DigestAlgo algo : DigestAlgo.values()) {
@@ -42,11 +42,13 @@ public class FilesystemBasedDigestTest {
                         buf.release();
                         String hex3 = FilesystemBasedDigest.getHex(bmd53);
                         assertTrue(algo + " Hex Not Equals", FilesystemBasedDigest.digestEquals(hex3, bmd53));
-                        assertTrue(algo + " Through ByteBuf vs Direct Not Equals", FilesystemBasedDigest.digestEquals(bmd53, bmd5));
-                        assertTrue(algo + " FromHex Not Equals", FilesystemBasedDigest.digestEquals(bmd53, FilesystemBasedDigest.getFromHex(hex3)));
+                        assertTrue(algo + " Through ByteBuf vs Direct Not Equals",
+                                FilesystemBasedDigest.digestEquals(bmd53, bmd5));
+                        assertTrue(algo + " FromHex Not Equals",
+                                FilesystemBasedDigest.digestEquals(bmd53, FilesystemBasedDigest.getFromHex(hex3)));
                     }
                     long end = System.currentTimeMillis();
-                    System.out.println("Algo: " + algo + " KeyLength: " + bmd5.length + " Time: "  + (end - start));
+                    System.out.println("Algo: " + algo + " KeyLength: " + bmd5.length + " Time: " + (end - start));
                 }
             }
         } catch (NoSuchAlgorithmException e) {
@@ -71,7 +73,7 @@ public class FilesystemBasedDigestTest {
                 assertTrue("Password Not Equals", FilesystemBasedDigest.equalPasswd(TESTPHRASE, crypt));
             }
             long end = System.currentTimeMillis();
-            System.out.println("Algo: CRYPT KeyLength: " + bmd5.length + " Time: "  + (end - start));
+            System.out.println("Algo: CRYPT KeyLength: " + bmd5.length + " Time: " + (end - start));
         }
     }
 
