@@ -28,49 +28,49 @@ import org.waarp.common.digest.MD5;
  */
 public class TestMD5 {
 
-	/**
-	 * Test function
-	 * 
-	 * @param argv
-	 *            with 2 arguments as filename to hash and full path to the Native Library
-	 */
-	public static void main(String argv[]) {
-		long start = System.currentTimeMillis();
-		if (argv.length < 1) {
-			// Only passwdCrypt test
-			for (int i = 0; i < 1000000; i++) {
-				MD5.passwdCrypt("Ceci est mon password!");
-			}
-			System.err.println("Final passwd crypted in " + (System.currentTimeMillis() - start)
-					+ "ms is: " + MD5.passwdCrypt("Ceci est mon password!"));
-			System.err
-					.println("Not enough argument: <full path to the filename to hash> [<full path to the native library>]");
-			return;
-		}
-		boolean nativeLib = false;
-		File file = new File(argv[0]);
-		byte[] bmd5;
-		try {
-			// By recompiling using the first: NIO support, the second: standard
-			// support
-			bmd5 = MD5.getHashNio(file);
-			// bmd5 = getHash(file);
-		} catch (IOException e1) {
-			bmd5 = null;
-		}
-		if (bmd5 != null) {
-			if (nativeLib) {
-				System.out.println("FileInterface MD5 is " + MD5.asHex(bmd5) +
-						" using Native Library in " +
-						(System.currentTimeMillis() - start) + " ms");
-			} else {
-				System.out.println("FileInterface MD5 is " + MD5.asHex(bmd5) +
-						" using Java version in " +
-						(System.currentTimeMillis() - start) + " ms");
-			}
-		} else {
-			System.err.println("Cannot compute md5 for " + argv[1]);
-		}
-	}
+    /**
+     * Test function
+     * 
+     * @param argv
+     *            with 2 arguments as filename to hash and full path to the Native Library
+     */
+    public static void main(String argv[]) {
+        long start = System.currentTimeMillis();
+        if (argv.length < 1) {
+            // Only passwdCrypt test
+            for (int i = 0; i < 1000000; i++) {
+                MD5.passwdCrypt("Ceci est mon password!");
+            }
+            System.err.println("Final passwd crypted in " + (System.currentTimeMillis() - start)
+                    + "ms is: " + MD5.passwdCrypt("Ceci est mon password!"));
+            System.err
+                    .println("Not enough argument: <full path to the filename to hash> [<full path to the native library>]");
+            return;
+        }
+        boolean nativeLib = false;
+        File file = new File(argv[0]);
+        byte[] bmd5;
+        try {
+            // By recompiling using the first: NIO support, the second: standard
+            // support
+            bmd5 = MD5.getHashNio(file);
+            // bmd5 = getHash(file);
+        } catch (IOException e1) {
+            bmd5 = null;
+        }
+        if (bmd5 != null) {
+            if (nativeLib) {
+                System.out.println("FileInterface MD5 is " + MD5.asHex(bmd5) +
+                        " using Native Library in " +
+                        (System.currentTimeMillis() - start) + " ms");
+            } else {
+                System.out.println("FileInterface MD5 is " + MD5.asHex(bmd5) +
+                        " using Java version in " +
+                        (System.currentTimeMillis() - start) + " ms");
+            }
+        } else {
+            System.err.println("Cannot compute md5 for " + argv[1]);
+        }
+    }
 
 }
