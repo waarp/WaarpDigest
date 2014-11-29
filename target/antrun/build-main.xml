@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+  <if>
+    <or>
+      <equals arg2="jar" arg1="jar"/>
+      <equals arg2="bundle" arg1="jar"/>
+    </or>
+    <then>
+      <move file="J:\Git\github\waarp-digest\WaarpDigest\target/WaarpDigest-3.0.0.jar" tofile="J:\Git\github\waarp-digest\WaarpDigest\target/WaarpDigest-3.0.0.orig.jar"/>
+      <zip destfile="J:\Git\github\waarp-digest\WaarpDigest\target/WaarpDigest-3.0.0.jar">
+        <zipfileset dir="J:\Git\github\waarp-digest\WaarpDigest" prefix="META-INF/">
+          <include name="LICENSE.*"/>
+          <include name="NOTICE.*"/>
+          <include name="COPYRIGHT.*"/>
+        </zipfileset>
+        <zipfileset dir="J:\Git\github\waarp-digest\WaarpDigest/license" prefix="META-INF/license/">
+          <exclude name="**/.*/**"/>
+          <include name="**"/>
+        </zipfileset>
+        <zipfileset filemode="644" src="J:\Git\github\waarp-digest\WaarpDigest\target/WaarpDigest-3.0.0.orig.jar" dirmode="755"></zipfileset>
+      </zip>
+      <delete file="J:\Git\github\waarp-digest\WaarpDigest\target/WaarpDigest-3.0.0.orig.jar"/>
+      <move file="J:\Git\github\waarp-digest\WaarpDigest\target/WaarpDigest-3.0.0-sources.jar" tofile="J:\Git\github\waarp-digest\WaarpDigest\target/WaarpDigest-3.0.0-sources.orig.jar"/>
+      <zip destfile="J:\Git\github\waarp-digest\WaarpDigest\target/WaarpDigest-3.0.0-sources.jar">
+        <zipfileset dir="J:\Git\github\waarp-digest\WaarpDigest" prefix="META-INF/">
+          <include name="LICENSE.*"/>
+          <include name="NOTICE.*"/>
+          <include name="COPYRIGHT.*"/>
+        </zipfileset>
+        <zipfileset dir="J:\Git\github\waarp-digest\WaarpDigest/license" prefix="META-INF/license/">
+          <exclude name="**/.*/**"/>
+          <include name="**"/>
+        </zipfileset>
+        <zipfileset filemode="644" src="J:\Git\github\waarp-digest\WaarpDigest\target/WaarpDigest-3.0.0-sources.orig.jar" dirmode="755">
+          <exclude name="**/${filterexclude}/**"/>
+          <include name="**/**/**"/>
+        </zipfileset>
+      </zip>
+      <delete file="J:\Git\github\waarp-digest\WaarpDigest\target/WaarpDigest-3.0.0-sources.orig.jar"/>
+    </then>
+  </if>
+</target>
+</project>
