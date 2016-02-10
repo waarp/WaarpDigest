@@ -47,23 +47,23 @@ class MD5State {
     /**
      * 128-bit state
      */
-    protected int state[];
+    int state[];
 
     /**
      * 64-bit character count
      */
-    protected long count;
+    long count;
 
     /**
      * 64-byte buffer (512 bits) for storing to-be-hashed characters
      */
-    protected byte buffer[];
+    byte buffer[];
 
     /**
      * Constructor
      * 
      */
-    public MD5State() {
+    MD5State() {
         buffer = new byte[64];
         count = 0;
         state = new int[4];
@@ -80,7 +80,7 @@ class MD5State {
      * 
      * @param from
      */
-    public MD5State(MD5State from) {
+    MD5State(MD5State from) {
         this();
 
         int i;
