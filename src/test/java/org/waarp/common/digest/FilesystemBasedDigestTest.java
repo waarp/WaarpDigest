@@ -23,20 +23,20 @@ public class FilesystemBasedDigestTest {
                     long start = System.currentTimeMillis();
                     byte[] bmd5 = null;
                     for (int i = 0; i < 100000; i++) {
-                        FilesystemBasedDigest.useFastMd5 = false;
+                        FilesystemBasedDigest.setUseFastMd5(false);
                         FilesystemBasedDigest digest = new FilesystemBasedDigest(algo);
                         digest.Update(TESTPHRASEBYTES, 0, TESTPHRASEBYTES.length);
                         bmd5 = digest.Final();
                         String hex = FilesystemBasedDigest.getHex(bmd5);
                         assertTrue(algo + " Hex Not Equals", FilesystemBasedDigest.digestEquals(hex, bmd5));
-                        FilesystemBasedDigest.useFastMd5 = true;
+                        FilesystemBasedDigest.setUseFastMd5(true);
                         FilesystemBasedDigest digest2 = new FilesystemBasedDigest(algo);
                         digest2.Update(TESTPHRASEBYTES, 0, TESTPHRASEBYTES.length);
                         byte[] bmd52 = digest2.Final();
                         String hex2 = FilesystemBasedDigest.getHex(bmd52);
                         assertTrue(algo + " Hex Not Equals", FilesystemBasedDigest.digestEquals(hex2, bmd52));
                         assertTrue(algo + " FastMD5 vs MD5 Not Equals", FilesystemBasedDigest.digestEquals(bmd52, bmd5));
-                        FilesystemBasedDigest.useFastMd5 = false;
+                        FilesystemBasedDigest.setUseFastMd5(false);
                         ByteBuf buf = Unpooled.wrappedBuffer(TESTPHRASEBYTES);
                         byte[] bmd53 = FilesystemBasedDigest.getHash(buf, algo);
                         buf.release();
@@ -64,7 +64,7 @@ public class FilesystemBasedDigestTest {
             long start = System.currentTimeMillis();
             byte[] bmd5 = null;
             for (int i = 0; i < 100000; i++) {
-                FilesystemBasedDigest.useFastMd5 = false;
+                FilesystemBasedDigest.setUseFastMd5(false);
                 String crypt = FilesystemBasedDigest.passwdCrypt(TESTPHRASE);
                 byte[] bcrypt = FilesystemBasedDigest.passwdCrypt(TESTPHRASEBYTES);
                 bmd5 = bcrypt;

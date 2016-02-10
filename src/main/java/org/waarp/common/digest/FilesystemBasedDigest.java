@@ -63,10 +63,10 @@ public class FilesystemBasedDigest {
      */
     public static final Charset UTF8 = Charset.forName("UTF-8");
 
-    protected MD5 md5 = null;
-    protected Checksum checksum = null;
-    protected MessageDigest digest = null;
-    protected DigestAlgo algo = null;
+    MD5 md5 = null;
+    Checksum checksum = null;
+    MessageDigest digest = null;
+    DigestAlgo algo = null;
 
     /**
      * Constructor of an independent Digest
@@ -84,7 +84,7 @@ public class FilesystemBasedDigest {
      * @throws NoSuchAlgorithmException
      */
     public void initialize() throws NoSuchAlgorithmException {
-        if (algo == DigestAlgo.MD5 && useFastMd5) {
+        if (algo == DigestAlgo.MD5 && isUseFastMd5()) {
             md5 = new MD5();
             return;
         }
@@ -207,8 +207,22 @@ public class FilesystemBasedDigest {
      * @return True if the native library is loaded
      */
     public static boolean initializeMd5(boolean mustUseFastMd5) {
-        useFastMd5 = mustUseFastMd5;
+        setUseFastMd5(mustUseFastMd5);
         return true;
+    }
+
+    /**
+     * @return the useFastMd5
+     */
+    public static boolean isUseFastMd5() {
+        return useFastMd5;
+    }
+
+    /**
+     * @param useFastMd5 the useFastMd5 to set
+     */
+    public static void setUseFastMd5(boolean useFastMd5) {
+        FilesystemBasedDigest.useFastMd5 = useFastMd5;
     }
 
     /**
@@ -250,7 +264,7 @@ public class FilesystemBasedDigest {
     /**
      * Should a file MD5 be computed using FastMD5
      */
-    public static boolean useFastMd5 = false;
+    private static boolean useFastMd5 = false;
 
     /**
      * 
@@ -281,7 +295,7 @@ public class FilesystemBasedDigest {
      * @throws IOException
      */
     public static byte[] getHashMd5Nio(File f) throws IOException {
-        if (useFastMd5) {
+        if (isUseFastMd5()) {
             return MD5.getHashNio(f);
         }
         return getHash(f, true, DigestAlgo.MD5);
@@ -295,7 +309,7 @@ public class FilesystemBasedDigest {
      * @throws IOException
      */
     public static byte[] getHashMd5(File f) throws IOException {
-        if (useFastMd5) {
+        if (isUseFastMd5()) {
             return MD5.getHash(f);
         }
         return getHash(f, false, DigestAlgo.MD5);
@@ -397,7 +411,7 @@ public class FilesystemBasedDigest {
         if (!f.exists()) {
             throw new FileNotFoundException(f.toString());
         }
-        if (algo == DigestAlgo.MD5 && useFastMd5) {
+        if (algo == DigestAlgo.MD5 && isUseFastMd5()) {
             if (nio) {
                 return MD5.getHashNio(f);
             } else {
@@ -499,7 +513,7 @@ public class FilesystemBasedDigest {
         if (stream == null) {
             throw new FileNotFoundException();
         }
-        if (algo == DigestAlgo.MD5 && useFastMd5) {
+        if (algo == DigestAlgo.MD5 && isUseFastMd5()) {
             return MD5.getHash(stream);
         }
         try {
@@ -553,7 +567,7 @@ public class FilesystemBasedDigest {
                 checksum = null;
                 return bytes;
             case MD5:
-                if (useFastMd5) {
+                if (isUseFastMd5()) {
                     MD5 md5 = new MD5();
                     md5.Update(bytes, start, length);
                     bytes = md5.Final();
@@ -662,7 +676,7 @@ public class FilesystemBasedDigest {
      * @throws IOException
      */
     public static final String passwdCrypt(String pwd) {
-        if (useFastMd5) {
+        if (isUseFastMd5()) {
             return MD5.passwdCrypt(pwd);
         }
         MessageDigest digest = null;
@@ -690,7 +704,7 @@ public class FilesystemBasedDigest {
      * @throws IOException
      */
     public static final byte[] passwdCrypt(byte[] pwd) {
-        if (useFastMd5) {
+        if (isUseFastMd5()) {
             return MD5.passwdCrypt(pwd);
         }
         MessageDigest digest = null;

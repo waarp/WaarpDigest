@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>WaarpDigest</artifactId>
   <name>Waarp Digest</name>
-  <version>3.0.0</version>
+  <version>3.0.1</version>
   <description>This project allows support of Digest (MD5, SHA1, CRC) for Commons Waarp project.</description>
   <url>http://waarp.github.com/WaarpDigest</url>
   <inceptionYear>2009</inceptionYear>
@@ -43,18 +43,18 @@
   	<dependency>
   		<groupId>io.netty</groupId>
   		<artifactId>netty-all</artifactId>
-  		<version>4.1.0.Beta3</version>
+  		<version>4.1.0.CR1</version>
   	</dependency>
   	<dependency>
   		<groupId>junit</groupId>
   		<artifactId>junit</artifactId>
-  		<version>4.11</version>
+  		<version>4.12</version>
   		<scope>test</scope>
   	</dependency>
   	<dependency>
   		<groupId>org.javassist</groupId>
   		<artifactId>javassist</artifactId>
-  		<version>3.18.2-GA</version>
+  		<version>3.20.0-GA</version>
   	</dependency>
   	<!-- <dependency>
   		<groupId>io.netty</groupId>
