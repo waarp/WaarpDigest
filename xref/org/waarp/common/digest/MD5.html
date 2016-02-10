@@ -77,7 +77,7 @@
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment"> * @author Frederic Bregier Bregier (add NIO support and dynamic library path loading)</em>
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/waarp/common/digest/MD5.html">MD5</a> {
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <strong class="jxr_keyword">class</strong> <a href="../../../../org/waarp/common/digest/MD5.html">MD5</a> {
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment">     * MD5 state</em>
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment">     */</em>
@@ -101,7 +101,7 @@
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment">     * Initialize MD5 internal state (object can be reused just by calling Init() after every</em>
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment">     * Final()</em>
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">void</strong> Init() {
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">void</strong> Init() {
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>          state = <strong class="jxr_keyword">new</strong> <a href="../../../../org/waarp/common/digest/MD5State.html">MD5State</a>();
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>          finals = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>      }
@@ -109,7 +109,7 @@
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>     <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment">     * Class constructor</em>
 <a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/waarp/common/digest/MD5.html">MD5</a>() {
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>     <a href="../../../../org/waarp/common/digest/MD5.html">MD5</a>() {
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>         Init();
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>     }
 <a class="jxr_linenumber" name="L107" href="#L107">107</a> 
@@ -119,7 +119,7 @@
 <a class="jxr_linenumber" name="L111" href="#L111">111</a> <em class="jxr_javadoccomment">     * @param ob</em>
 <a class="jxr_linenumber" name="L112" href="#L112">112</a> <em class="jxr_javadoccomment">     *            Object, ob.toString() is used to update hash after initialization</em>
 <a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../org/waarp/common/digest/MD5.html">MD5</a>(Object ob) {
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>     <a href="../../../../org/waarp/common/digest/MD5.html">MD5</a>(Object ob) {
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>         <strong class="jxr_keyword">this</strong>();
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>         Update(ob.toString());
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>     }
@@ -338,7 +338,7 @@
 <a class="jxr_linenumber" name="L330" href="#L330">330</a> <em class="jxr_javadoccomment">     * @param length</em>
 <a class="jxr_linenumber" name="L331" href="#L331">331</a> <em class="jxr_javadoccomment">     *            Use at maximum `length' bytes (absolute maximum is buffer.length)</em>
 <a class="jxr_linenumber" name="L332" href="#L332">332</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L333" href="#L333">333</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> Update(<a href="../../../../org/waarp/common/digest/MD5State.html">MD5State</a> stat, byte buffer[], <strong class="jxr_keyword">int</strong> offset, <strong class="jxr_keyword">int</strong> length) {
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>     <strong class="jxr_keyword">void</strong> Update(<a href="../../../../org/waarp/common/digest/MD5State.html">MD5State</a> stat, byte buffer[], <strong class="jxr_keyword">int</strong> offset, <strong class="jxr_keyword">int</strong> length) {
 <a class="jxr_linenumber" name="L334" href="#L334">334</a>         <strong class="jxr_keyword">int</strong> index, partlen, i, start;
 <a class="jxr_linenumber" name="L335" href="#L335">335</a>         finals = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L336" href="#L336">336</a>         <strong class="jxr_keyword">int</strong> newlength = length;
@@ -395,7 +395,7 @@
 <a class="jxr_linenumber" name="L387" href="#L387">387</a> <em class="jxr_javadoccomment">     * @param length</em>
 <a class="jxr_linenumber" name="L388" href="#L388">388</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L389" href="#L389">389</a> 
-<a class="jxr_linenumber" name="L390" href="#L390">390</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> Update(byte buffer[], <strong class="jxr_keyword">int</strong> offset, <strong class="jxr_keyword">int</strong> length) {
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>     <strong class="jxr_keyword">void</strong> Update(byte buffer[], <strong class="jxr_keyword">int</strong> offset, <strong class="jxr_keyword">int</strong> length) {
 <a class="jxr_linenumber" name="L391" href="#L391">391</a>         Update(state, buffer, offset, length);
 <a class="jxr_linenumber" name="L392" href="#L392">392</a>     }
 <a class="jxr_linenumber" name="L393" href="#L393">393</a> 
@@ -405,7 +405,7 @@
 <a class="jxr_linenumber" name="L397" href="#L397">397</a> <em class="jxr_javadoccomment">     * @param buffer</em>
 <a class="jxr_linenumber" name="L398" href="#L398">398</a> <em class="jxr_javadoccomment">     * @param length</em>
 <a class="jxr_linenumber" name="L399" href="#L399">399</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L400" href="#L400">400</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> Update(byte buffer[], <strong class="jxr_keyword">int</strong> length) {
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>     <strong class="jxr_keyword">void</strong> Update(byte buffer[], <strong class="jxr_keyword">int</strong> length) {
 <a class="jxr_linenumber" name="L401" href="#L401">401</a>         Update(state, buffer, 0, length);
 <a class="jxr_linenumber" name="L402" href="#L402">402</a>     }
 <a class="jxr_linenumber" name="L403" href="#L403">403</a> 
@@ -415,7 +415,7 @@
 <a class="jxr_linenumber" name="L407" href="#L407">407</a> <em class="jxr_javadoccomment">     * @param buffer</em>
 <a class="jxr_linenumber" name="L408" href="#L408">408</a> <em class="jxr_javadoccomment">     *            Array of bytes to use for updating the hash</em>
 <a class="jxr_linenumber" name="L409" href="#L409">409</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L410" href="#L410">410</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> Update(byte buffer[]) {
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>     <strong class="jxr_keyword">void</strong> Update(byte buffer[]) {
 <a class="jxr_linenumber" name="L411" href="#L411">411</a>         Update(buffer, 0, buffer.length);
 <a class="jxr_linenumber" name="L412" href="#L412">412</a>     }
 <a class="jxr_linenumber" name="L413" href="#L413">413</a> 
@@ -425,7 +425,7 @@
 <a class="jxr_linenumber" name="L417" href="#L417">417</a> <em class="jxr_javadoccomment">     * @param b</em>
 <a class="jxr_linenumber" name="L418" href="#L418">418</a> <em class="jxr_javadoccomment">     *            Single byte to update the hash</em>
 <a class="jxr_linenumber" name="L419" href="#L419">419</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L420" href="#L420">420</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> Update(byte b) {
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>     <strong class="jxr_keyword">void</strong> Update(byte b) {
 <a class="jxr_linenumber" name="L421" href="#L421">421</a>         byte buffer[] = <strong class="jxr_keyword">new</strong> byte[1];
 <a class="jxr_linenumber" name="L422" href="#L422">422</a>         buffer[0] = b;
 <a class="jxr_linenumber" name="L423" href="#L423">423</a> 
@@ -444,7 +444,7 @@
 <a class="jxr_linenumber" name="L436" href="#L436">436</a> <em class="jxr_javadoccomment">     * @param s</em>
 <a class="jxr_linenumber" name="L437" href="#L437">437</a> <em class="jxr_javadoccomment">     *            String to be update to hash (is used as s.getBytes())</em>
 <a class="jxr_linenumber" name="L438" href="#L438">438</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L439" href="#L439">439</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> Update(String s) {
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>     <strong class="jxr_keyword">void</strong> Update(String s) {
 <a class="jxr_linenumber" name="L440" href="#L440">440</a>         byte chars[] = s.getBytes(FilesystemBasedDigest.UTF8);
 <a class="jxr_linenumber" name="L441" href="#L441">441</a>         Update(chars, chars.length);
 <a class="jxr_linenumber" name="L442" href="#L442">442</a>     }
@@ -461,7 +461,7 @@
 <a class="jxr_linenumber" name="L453" href="#L453">453</a> <em class="jxr_javadoccomment">     * @exception java.io.UnsupportedEncodingException</em>
 <a class="jxr_linenumber" name="L454" href="#L454">454</a> <em class="jxr_javadoccomment">     *                If the named charset is not supported.</em>
 <a class="jxr_linenumber" name="L455" href="#L455">455</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L456" href="#L456">456</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> Update(String s, String charset_name)
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>     <strong class="jxr_keyword">void</strong> Update(String s, String charset_name)
 <a class="jxr_linenumber" name="L457" href="#L457">457</a>             <strong class="jxr_keyword">throws</strong> java.io.UnsupportedEncodingException {
 <a class="jxr_linenumber" name="L458" href="#L458">458</a>         Charset newcharset = FilesystemBasedDigest.UTF8;
 <a class="jxr_linenumber" name="L459" href="#L459">459</a>         <strong class="jxr_keyword">if</strong> (charset_name != <strong class="jxr_keyword">null</strong>) {
@@ -478,7 +478,7 @@
 <a class="jxr_linenumber" name="L470" href="#L470">470</a> <em class="jxr_javadoccomment">     *            Integer value, which is then converted to byte as i &amp; 0xff</em>
 <a class="jxr_linenumber" name="L471" href="#L471">471</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L472" href="#L472">472</a> 
-<a class="jxr_linenumber" name="L473" href="#L473">473</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> Update(<strong class="jxr_keyword">int</strong> i) {
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>     <strong class="jxr_keyword">void</strong> Update(<strong class="jxr_keyword">int</strong> i) {
 <a class="jxr_linenumber" name="L474" href="#L474">474</a>         Update((byte) (i &amp; 0xff));
 <a class="jxr_linenumber" name="L475" href="#L475">475</a>     }
 <a class="jxr_linenumber" name="L476" href="#L476">476</a> 
@@ -490,7 +490,7 @@
 <a class="jxr_linenumber" name="L482" href="#L482">482</a> <em class="jxr_javadoccomment">     * @param buffer</em>
 <a class="jxr_linenumber" name="L483" href="#L483">483</a> <em class="jxr_javadoccomment">     *            ByteBuf to use for updating the hash and this buffer will not be changed</em>
 <a class="jxr_linenumber" name="L484" href="#L484">484</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L485" href="#L485">485</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> Update(ByteBuf buffer) {
+<a class="jxr_linenumber" name="L485" href="#L485">485</a>     <strong class="jxr_keyword">void</strong> Update(ByteBuf buffer) {
 <a class="jxr_linenumber" name="L486" href="#L486">486</a>         byte[] bytes;
 <a class="jxr_linenumber" name="L487" href="#L487">487</a>         <strong class="jxr_keyword">int</strong> start = 0;
 <a class="jxr_linenumber" name="L488" href="#L488">488</a>         <strong class="jxr_keyword">int</strong> len = buffer.readableBytes();
@@ -530,7 +530,7 @@
 <a class="jxr_linenumber" name="L522" href="#L522">522</a> <em class="jxr_javadoccomment">     * </em>
 <a class="jxr_linenumber" name="L523" href="#L523">523</a> <em class="jxr_javadoccomment">     * @return Array of 16 bytes, the hash of all updated bytes</em>
 <a class="jxr_linenumber" name="L524" href="#L524">524</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L525" href="#L525">525</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> byte[] Final() {
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>     <strong class="jxr_keyword">synchronized</strong> byte[] Final() {
 <a class="jxr_linenumber" name="L526" href="#L526">526</a>         byte bits[];
 <a class="jxr_linenumber" name="L527" href="#L527">527</a>         <strong class="jxr_keyword">int</strong> index, padlen;
 <a class="jxr_linenumber" name="L528" href="#L528">528</a>         <a href="../../../../org/waarp/common/digest/MD5State.html">MD5State</a> fin;
@@ -566,7 +566,7 @@
 <a class="jxr_linenumber" name="L558" href="#L558">558</a> <em class="jxr_javadoccomment">     *            Array of bytes to convert to hex-string</em>
 <a class="jxr_linenumber" name="L559" href="#L559">559</a> <em class="jxr_javadoccomment">     * @return Generated hex string</em>
 <a class="jxr_linenumber" name="L560" href="#L560">560</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L561" href="#L561">561</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String asHex(byte hash[]) {
+<a class="jxr_linenumber" name="L561" href="#L561">561</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String asHex(byte hash[]) {
 <a class="jxr_linenumber" name="L562" href="#L562">562</a>         <strong class="jxr_keyword">char</strong> buf[] = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">char</strong>[hash.length * 2];
 <a class="jxr_linenumber" name="L563" href="#L563">563</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0, x = 0; i &lt; hash.length; i++) {
 <a class="jxr_linenumber" name="L564" href="#L564">564</a>             buf[x++] = HEX_CHARS[hash[i] &gt;&gt;&gt; 4 &amp; 0xf];
@@ -582,7 +582,7 @@
 <a class="jxr_linenumber" name="L574" href="#L574">574</a> <em class="jxr_javadoccomment">     *            hex string</em>
 <a class="jxr_linenumber" name="L575" href="#L575">575</a> <em class="jxr_javadoccomment">     * @return Array of bytes converted from hex-string</em>
 <a class="jxr_linenumber" name="L576" href="#L576">576</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L577" href="#L577">577</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> byte[] asByte(String buf) {
+<a class="jxr_linenumber" name="L577" href="#L577">577</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> byte[] asByte(String buf) {
 <a class="jxr_linenumber" name="L578" href="#L578">578</a>         byte from[] = buf.getBytes(FilesystemBasedDigest.UTF8);
 <a class="jxr_linenumber" name="L579" href="#L579">579</a>         byte hash[] = <strong class="jxr_keyword">new</strong> byte[from.length / 2];
 <a class="jxr_linenumber" name="L580" href="#L580">580</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0, x = 0; i &lt; hash.length; i++) {
@@ -608,7 +608,7 @@
 <a class="jxr_linenumber" name="L600" href="#L600">600</a> <em class="jxr_javadoccomment">     * </em>
 <a class="jxr_linenumber" name="L601" href="#L601">601</a> <em class="jxr_javadoccomment">     * @return String of this object's hash</em>
 <a class="jxr_linenumber" name="L602" href="#L602">602</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L603" href="#L603">603</a>     <strong class="jxr_keyword">public</strong> String asHex() {
+<a class="jxr_linenumber" name="L603" href="#L603">603</a>     String asHex() {
 <a class="jxr_linenumber" name="L604" href="#L604">604</a>         <strong class="jxr_keyword">return</strong> asHex(Final());
 <a class="jxr_linenumber" name="L605" href="#L605">605</a>     }
 <a class="jxr_linenumber" name="L606" href="#L606">606</a> 
@@ -620,7 +620,7 @@
 <a class="jxr_linenumber" name="L612" href="#L612">612</a> <em class="jxr_javadoccomment">     * @return the hash from the given file</em>
 <a class="jxr_linenumber" name="L613" href="#L613">613</a> <em class="jxr_javadoccomment">     * @throws IOException</em>
 <a class="jxr_linenumber" name="L614" href="#L614">614</a> <em class="jxr_javadoccomment">     **/</em>
-<a class="jxr_linenumber" name="L615" href="#L615">615</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> byte[] getHash(File f) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L615" href="#L615">615</a>     <strong class="jxr_keyword">static</strong> byte[] getHash(File f) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L616" href="#L616">616</a>         InputStream close_me = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L617" href="#L617">617</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L618" href="#L618">618</a>             <strong class="jxr_keyword">long</strong> buf_size = f.length();
@@ -663,7 +663,7 @@
 <a class="jxr_linenumber" name="L655" href="#L655">655</a> <em class="jxr_javadoccomment">     * @return the hash from the FileInterface with NIO access</em>
 <a class="jxr_linenumber" name="L656" href="#L656">656</a> <em class="jxr_javadoccomment">     * @throws IOException</em>
 <a class="jxr_linenumber" name="L657" href="#L657">657</a> <em class="jxr_javadoccomment">     **/</em>
-<a class="jxr_linenumber" name="L658" href="#L658">658</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> byte[] getHashNio(File f) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L658" href="#L658">658</a>     <strong class="jxr_keyword">static</strong> byte[] getHashNio(File f) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L659" href="#L659">659</a>         <strong class="jxr_keyword">if</strong> (!f.exists()) {
 <a class="jxr_linenumber" name="L660" href="#L660">660</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> FileNotFoundException(f.toString());
 <a class="jxr_linenumber" name="L661" href="#L661">661</a>         }
@@ -719,7 +719,7 @@
 <a class="jxr_linenumber" name="L711" href="#L711">711</a> <em class="jxr_javadoccomment">     * @return the hash from the given stream</em>
 <a class="jxr_linenumber" name="L712" href="#L712">712</a> <em class="jxr_javadoccomment">     * @throws IOException</em>
 <a class="jxr_linenumber" name="L713" href="#L713">713</a> <em class="jxr_javadoccomment">     **/</em>
-<a class="jxr_linenumber" name="L714" href="#L714">714</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> byte[] getHash(InputStream stream) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L714" href="#L714">714</a>     <strong class="jxr_keyword">static</strong> byte[] getHash(InputStream stream) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L715" href="#L715">715</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L716" href="#L716">716</a>             <strong class="jxr_keyword">long</strong> buf_size = 65536;
 <a class="jxr_linenumber" name="L717" href="#L717">717</a>             byte[] buf = <strong class="jxr_keyword">new</strong> byte[(<strong class="jxr_keyword">int</strong>) buf_size];
@@ -752,7 +752,7 @@
 <a class="jxr_linenumber" name="L744" href="#L744">744</a> <em class="jxr_javadoccomment">     *         are null; or either hash array is less than 16 bytes in length and their lengths and</em>
 <a class="jxr_linenumber" name="L745" href="#L745">745</a> <em class="jxr_javadoccomment">     *         all of their bytes are equal.</em>
 <a class="jxr_linenumber" name="L746" href="#L746">746</a> <em class="jxr_javadoccomment">     **/</em>
-<a class="jxr_linenumber" name="L747" href="#L747">747</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> hashesEqual(byte[] hash1, byte[] hash2) {
+<a class="jxr_linenumber" name="L747" href="#L747">747</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> hashesEqual(byte[] hash1, byte[] hash2) {
 <a class="jxr_linenumber" name="L748" href="#L748">748</a>         <strong class="jxr_keyword">return</strong> Arrays.equals(hash1, hash2);
 <a class="jxr_linenumber" name="L749" href="#L749">749</a>     }
 <a class="jxr_linenumber" name="L750" href="#L750">750</a> 
@@ -765,7 +765,7 @@
 <a class="jxr_linenumber" name="L757" href="#L757">757</a> <em class="jxr_javadoccomment">     *            to crypt</em>
 <a class="jxr_linenumber" name="L758" href="#L758">758</a> <em class="jxr_javadoccomment">     * @return the crypted password</em>
 <a class="jxr_linenumber" name="L759" href="#L759">759</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L760" href="#L760">760</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String passwdCrypt(String pwd) {
+<a class="jxr_linenumber" name="L760" href="#L760">760</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String passwdCrypt(String pwd) {
 <a class="jxr_linenumber" name="L761" href="#L761">761</a>         <a href="../../../../org/waarp/common/digest/MD5.html">MD5</a> md5 = <strong class="jxr_keyword">new</strong> <a href="../../../../org/waarp/common/digest/MD5.html">MD5</a>();
 <a class="jxr_linenumber" name="L762" href="#L762">762</a>         byte[] bpwd = pwd.getBytes(FilesystemBasedDigest.UTF8);
 <a class="jxr_linenumber" name="L763" href="#L763">763</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; 16; i++) {
@@ -782,7 +782,7 @@
 <a class="jxr_linenumber" name="L774" href="#L774">774</a> <em class="jxr_javadoccomment">     *            to crypt</em>
 <a class="jxr_linenumber" name="L775" href="#L775">775</a> <em class="jxr_javadoccomment">     * @return the crypted password</em>
 <a class="jxr_linenumber" name="L776" href="#L776">776</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L777" href="#L777">777</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> byte[] passwdCrypt(byte[] bpwd) {
+<a class="jxr_linenumber" name="L777" href="#L777">777</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> byte[] passwdCrypt(byte[] bpwd) {
 <a class="jxr_linenumber" name="L778" href="#L778">778</a>         <a href="../../../../org/waarp/common/digest/MD5.html">MD5</a> md5 = <strong class="jxr_keyword">new</strong> <a href="../../../../org/waarp/common/digest/MD5.html">MD5</a>();
 <a class="jxr_linenumber" name="L779" href="#L779">779</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; 16; i++) {
 <a class="jxr_linenumber" name="L780" href="#L780">780</a>             md5.Update(md5.state, bpwd, 0, bpwd.length);
@@ -797,7 +797,7 @@
 <a class="jxr_linenumber" name="L789" href="#L789">789</a> <em class="jxr_javadoccomment">     * @param cryptPwd</em>
 <a class="jxr_linenumber" name="L790" href="#L790">790</a> <em class="jxr_javadoccomment">     * @return True if the pwd is comparable with the cryptPwd</em>
 <a class="jxr_linenumber" name="L791" href="#L791">791</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L792" href="#L792">792</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> equalPasswd(String pwd, String cryptPwd) {
+<a class="jxr_linenumber" name="L792" href="#L792">792</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> equalPasswd(String pwd, String cryptPwd) {
 <a class="jxr_linenumber" name="L793" href="#L793">793</a>         String asHex = passwdCrypt(pwd);
 <a class="jxr_linenumber" name="L794" href="#L794">794</a>         <strong class="jxr_keyword">return</strong> cryptPwd.equals(asHex);
 <a class="jxr_linenumber" name="L795" href="#L795">795</a>     }
@@ -808,13 +808,13 @@
 <a class="jxr_linenumber" name="L800" href="#L800">800</a> <em class="jxr_javadoccomment">     * @param cryptPwd</em>
 <a class="jxr_linenumber" name="L801" href="#L801">801</a> <em class="jxr_javadoccomment">     * @return True if the pwd is comparable with the cryptPwd</em>
 <a class="jxr_linenumber" name="L802" href="#L802">802</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L803" href="#L803">803</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> equalPasswd(byte[] pwd, byte[] cryptPwd) {
+<a class="jxr_linenumber" name="L803" href="#L803">803</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> equalPasswd(byte[] pwd, byte[] cryptPwd) {
 <a class="jxr_linenumber" name="L804" href="#L804">804</a>         byte[] bytes = passwdCrypt(pwd);
 <a class="jxr_linenumber" name="L805" href="#L805">805</a>         <strong class="jxr_keyword">return</strong> Arrays.equals(cryptPwd, bytes);
 <a class="jxr_linenumber" name="L806" href="#L806">806</a>     }
 <a class="jxr_linenumber" name="L807" href="#L807">807</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.waarp.it">Waarp</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.waarp.it">Waarp</a>. All rights reserved.</div>
 </body>
 </html>

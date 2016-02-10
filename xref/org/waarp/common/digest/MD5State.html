@@ -55,23 +55,23 @@
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment">     * 128-bit state</em>
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> state[];
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">int</strong> state[];
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>  
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment">     * 64-bit character count</em>
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>      <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> count;
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>      <strong class="jxr_keyword">long</strong> count;
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment">     * 64-byte buffer (512 bits) for storing to-be-hashed characters</em>
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>      <strong class="jxr_keyword">protected</strong> byte buffer[];
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      byte buffer[];
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment">     * Constructor</em>
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment">     * </em>
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../org/waarp/common/digest/MD5State.html">MD5State</a>() {
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      <a href="../../../../org/waarp/common/digest/MD5State.html">MD5State</a>() {
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>          buffer = <strong class="jxr_keyword">new</strong> byte[64];
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>          count = 0;
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>          state = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">int</strong>[4];
@@ -88,7 +88,7 @@
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment">     * </em>
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment">     * @param from</em>
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../org/waarp/common/digest/MD5State.html">MD5State</a>(<a href="../../../../org/waarp/common/digest/MD5State.html">MD5State</a> from) {
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <a href="../../../../org/waarp/common/digest/MD5State.html">MD5State</a>(<a href="../../../../org/waarp/common/digest/MD5State.html">MD5State</a> from) {
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>          <strong class="jxr_keyword">this</strong>();
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>  
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>          <strong class="jxr_keyword">int</strong> i;
@@ -106,6 +106,6 @@
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.waarp.it">Waarp</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2009&#x2013;2016 <a href="http://www.waarp.it">Waarp</a>. All rights reserved.</div>
 </body>
 </html>
