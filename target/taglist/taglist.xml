@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<report xmlns="org.codehaus.mojo.taglist-maven-plugin">
+  <tags>
+    <tag name="Todo Work" count="0" />
+  </tags>
+</report>

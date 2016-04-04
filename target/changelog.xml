@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<changelog>
+  
+<changeset datePattern="yyyyMMdd HH:mm:ss z" start="20160105 13:57:46 CET" end="20160405 14:57:46 CEST">
+	<changelog-entry>
+		<date pattern="yyyy-MM-dd">2016-03-18</date>
+		<time pattern="HH:mm:ss">16:36:20</time>
+		<author><![CDATA[Bruno Carlin <bruno@bcarlin.net>]]></author>
+		<file>
+			<action>modified</action>
+			<name>pom.xml</name>
+			<revision>ba177680df9dd759a1b074e6e2824e8cf01b43f8</revision>
+		</file>
+		<msg><![CDATA[force maven to build jar compatible with java1.7+]]></msg>
+	</changelog-entry>
+	<changelog-entry>
+		<date pattern="yyyy-MM-dd">2016-02-26</date>
+		<time pattern="HH:mm:ss">08:24:07</time>
+		<author><![CDATA[Frederic Bregier <fredbregier@free.fr>]]></author>
+		<file>
+			<action>modified</action>
+			<name>pom.xml</name>
+			<revision>31d48d6145bd6a6de4495fb5d6ddbb5fa42c3fec</revision>
+		</file>
+		<msg><![CDATA[Fix Netty version]]></msg>
+	</changelog-entry>
+	<changelog-entry>
+		<date pattern="yyyy-MM-dd">2016-02-07</date>
+		<time pattern="HH:mm:ss">21:05:47</time>
+		<author><![CDATA[Frederic Bregier <fredbregier@free.fr>]]></author>
+		<file>
+			<action>modified</action>
+			<name>pom.xml</name>
+			<revision>14ff8b7f0ccf1233335a286587c090d1a6eed417</revision>
+		</file>
+		<msg><![CDATA[New release]]></msg>
+	</changelog-entry>
+</changeset>
+
+</changelog>
