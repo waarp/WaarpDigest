@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>WaarpDigest</artifactId>
   <name>Waarp Digest</name>
-  <version>3.0.4</version>
+  <version>3.0.5</version>
   <description>This project allows support of Digest (MD5, SHA1, CRC) for Commons Waarp project.</description>
   <url>http://waarp.github.com/WaarpDigest</url>
   <inceptionYear>2009</inceptionYear>
